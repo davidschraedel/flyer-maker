@@ -295,18 +295,100 @@
         }
 
         /* Position & Spacing controls */
+        .target-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg);
+            border: var(--border-width) solid var(--fg);
+            border-radius: 8px;
+            padding: 3px;
+            margin: 6px 0 10px;
+        }
+
+        .target-tab {
+            flex: 1;
+            font: 700 11px/1.2 "Space Grotesk", system-ui, sans-serif;
+            border: 1.5px solid transparent;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--fg);
+            padding: 6px 2px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: none !important;
+            min-height: 28px !important;
+            transition: background 0.12s, color 0.12s, border-color 0.12s;
+            user-select: none;
+        }
+
+        .target-tab:hover:not(.active) {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .target-tab.active {
+            background: var(--acc);
+            color: #fff;
+            border-color: var(--fg);
+            box-shadow: 1px 1px 0 var(--fg) !important;
+        }
+
+        .pos-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 6px 0 8px;
+            padding: 6px 8px;
+            background: var(--bg);
+            border: 1px solid var(--fg);
+            border-radius: 6px;
+        }
+
+        .pos-active-title {
+            font: 800 13px "Bricolage Grotesque", system-ui, sans-serif;
+            color: var(--fg);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .align-btn-group {
+            display: flex;
+            gap: 3px;
+        }
+
+        .align-btn {
+            min-height: 24px !important;
+            padding: 2px 7px !important;
+            font-size: 11px !important;
+            font-weight: 700;
+            border-radius: 5px !important;
+            box-shadow: 1px 1px 0 var(--fg) !important;
+        }
+
+        .align-btn.active {
+            background: var(--fg) !important;
+            color: var(--bg) !important;
+        }
+
         .pos-control-row {
             display: flex;
             flex-direction: column;
             gap: 4px;
-            margin: 8px 0;
+            margin: 7px 0;
         }
 
         .pos-control-label {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pos-val-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .pos-val {
@@ -316,18 +398,94 @@
             border: 1px solid var(--fg);
             padding: 1px 6px;
             border-radius: 4px;
+            min-width: 46px;
+            text-align: right;
+        }
+
+        .btn-micro {
+            font: 700 10px "Space Mono", monospace;
+            background: var(--bg);
+            border: 1px solid var(--fg);
+            color: var(--fg);
+            border-radius: 4px;
+            padding: 1px 5px;
+            cursor: pointer;
+            min-height: 20px !important;
+            box-shadow: none !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.1s, color 0.1s;
+        }
+
+        .btn-micro:hover {
+            background: var(--acc);
+            color: #fff;
+            border-color: var(--fg);
         }
 
         .nudge-bar {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             align-items: center;
+            justify-content: space-between;
             flex-wrap: wrap;
-            margin: 8px 0;
-            padding: 6px 8px;
+            margin: 10px 0;
+            padding: 8px 10px;
             background: var(--bg);
-            border: 1px dashed var(--fg);
+            border: 1.5px dashed var(--fg);
             border-radius: 8px;
+        }
+
+        .nudge-buttons {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .nudge-step-group {
+            display: flex;
+            gap: 2px;
+            background: var(--card);
+            padding: 2px;
+            border: 1px solid var(--fg);
+            border-radius: 6px;
+        }
+
+        .nudge-step {
+            min-height: 22px !important;
+            padding: 1px 6px !important;
+            font-size: 10px !important;
+            font-family: "Space Mono", monospace !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            color: var(--fg) !important;
+            cursor: pointer;
+        }
+
+        .nudge-step.active {
+            background: var(--acc) !important;
+            color: #fff !important;
+            border-radius: 4px !important;
+            font-weight: 700;
+        }
+
+        .layout-distribution-card {
+            background: var(--bg);
+            border: var(--border-width) solid var(--fg);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin: 10px 0 8px;
+            box-shadow: 2px 2px 0 var(--fg);
+        }
+
+        .dist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 12px;
         }
 
         .btn-sm {
@@ -730,7 +888,8 @@
                     </div>
                     <label>Title weight<input type="range" id="tw" min="300" max="900" step="100"></label>
                     <label>Body weight<input type="range" id="bw" min="300" max="700" step="100"></label>
-                    <label>Title size<input type="range" id="ts" min=".6" max="1.4" step=".05"></label>
+                    <label>Title size<input type="range" id="ts" min=".5" max="1.6" step=".05"></label>
+                    <label>Body text size<input type="range" id="bs" min=".5" max="1.5" step=".05" value="1"></label>
                     <div class="shuffle-grid">
                         <div class="shuffle-item"><span>Layout</span><i data-d="lay"></i></div>
                         <div class="shuffle-item"><span>Texture</span><i data-d="tex_btn"></i></div>
@@ -738,58 +897,115 @@
                     </div>
                 </details>
 
-                <!-- Dedicated Position & Nudge Controls -->
+                <!-- Dedicated Position & Spacing Controls -->
                 <details id="sec-pos" open>
                     <summary>Position &amp; Spacing</summary>
-                    <label>Adjust item
-                        <select id="pos-target">
-                            <option value="m">Details &amp; Copy (Sell / Notes / RSVP)</option>
-                            <option value="t">Title</option>
-                            <option value="i">Event Info (When / Where / Host)</option>
-                            <option value="p">Photo</option>
-                        </select>
-                    </label>
-
-                    <div class="pos-control-row">
-                        <div class="pos-control-label">
-                            <span>Vertical position (Y)</span>
-                            <span id="pos-y-val" class="pos-val">0 px</span>
-                        </div>
-                        <input type="range" id="pos-y" min="-300" max="300" step="2" value="0">
+                    
+                    <!-- Element Selector Tabs -->
+                    <div class="target-tabs" id="pos-target-tabs" role="tablist">
+                        <button type="button" class="target-tab active" data-target="t">Title</button>
+                        <button type="button" class="target-tab" data-target="i">Event Info</button>
+                        <button type="button" class="target-tab" data-target="m">Details</button>
+                        <button type="button" class="target-tab" data-target="p">Photo</button>
                     </div>
 
-                    <div class="pos-control-row">
-                        <div class="pos-control-label">
-                            <span>Horizontal position (X)</span>
-                            <span id="pos-x-val" class="pos-val">0 px</span>
+                    <!-- Hidden select for programmatic sync -->
+                    <select id="pos-target" style="display:none;">
+                        <option value="t">Title</option>
+                        <option value="i">Event Info</option>
+                        <option value="m">Details</option>
+                        <option value="p">Photo</option>
+                    </select>
+
+                    <!-- Active Item Header & Alignment Group -->
+                    <div class="pos-item-header">
+                        <span id="active-item-title" class="pos-active-title">Title Placement</span>
+                        <div class="align-btn-group" id="pos-align-group">
+                            <button type="button" class="btn align-btn active" data-align="0" id="al-left" title="Align Left">Left</button>
+                            <button type="button" class="btn align-btn" data-align="1" id="al-center" title="Align Center">Center</button>
+                            <button type="button" class="btn align-btn" data-align="2" id="al-right" title="Align Right">Right</button>
                         </div>
-                        <input type="range" id="pos-x" min="-250" max="250" step="2" value="0">
                     </div>
 
+                    <!-- Vertical Y Slider -->
+                    <div class="pos-control-row">
+                        <div class="pos-control-label">
+                            <span>Vertical position (Y axis)</span>
+                            <div class="pos-val-group">
+                                <span id="pos-y-val" class="pos-val">0 px</span>
+                                <button type="button" class="btn-micro" id="reset-y" title="Reset Y position to 0">0</button>
+                            </div>
+                        </div>
+                        <input type="range" id="pos-y" min="-500" max="500" step="1" value="0">
+                    </div>
+
+                    <!-- Horizontal X Slider -->
+                    <div class="pos-control-row">
+                        <div class="pos-control-label">
+                            <span>Horizontal position (X axis)</span>
+                            <div class="pos-val-group">
+                                <span id="pos-x-val" class="pos-val">0 px</span>
+                                <button type="button" class="btn-micro" id="reset-x" title="Reset X position to 0">0</button>
+                            </div>
+                        </div>
+                        <input type="range" id="pos-x" min="-400" max="400" step="1" value="0">
+                    </div>
+
+                    <!-- Item Scale / Size Slider -->
+                    <div class="pos-control-row" id="item-scale-row">
+                        <div class="pos-control-label">
+                            <span id="scale-label">Item text size</span>
+                            <span id="scale-val" class="pos-val">100%</span>
+                        </div>
+                        <input type="range" id="scale-slider" min="0.5" max="1.6" step="0.05" value="1.0">
+                    </div>
+
+                    <!-- Tilt / Angle Slider -->
                     <div class="pos-control-row">
                         <div class="pos-control-label">
                             <span>Tilt / Angle</span>
-                            <span id="pos-rot-val" class="pos-val">0°</span>
+                            <div class="pos-val-group">
+                                <span id="pos-rot-val" class="pos-val">0°</span>
+                                <button type="button" class="btn-micro" id="reset-rot" title="Level angle to 0°">0°</button>
+                            </div>
                         </div>
-                        <input type="range" id="pos-rot" min="-18" max="18" step="0.5" value="0">
+                        <input type="range" id="pos-rot" min="-20" max="20" step="0.5" value="0">
                     </div>
 
+                    <!-- Nudge Bar with D-Pad & Step Selector -->
                     <div class="nudge-bar">
-                        <span
-                            style="font-size: 11px; font-weight: 700; opacity: 0.7; text-transform: uppercase;">Nudge:</span>
-                        <button type="button" class="btn btn-sm" id="nudge-up" title="Nudge Up 6px">↑ Up</button>
-                        <button type="button" class="btn btn-sm" id="nudge-down" title="Nudge Down 6px">↓ Down</button>
-                        <button type="button" class="btn btn-sm" id="nudge-left" title="Nudge Left 6px">← Left</button>
-                        <button type="button" class="btn btn-sm" id="nudge-right" title="Nudge Right 6px">→
-                            Right</button>
+                        <div class="nudge-buttons">
+                            <button type="button" class="btn btn-sm" id="nudge-up" title="Nudge Up">↑ Up</button>
+                            <button type="button" class="btn btn-sm" id="nudge-down" title="Nudge Down">↓ Down</button>
+                            <button type="button" class="btn btn-sm" id="nudge-left" title="Nudge Left">← Left</button>
+                            <button type="button" class="btn btn-sm" id="nudge-right" title="Nudge Right">→ Right</button>
+                        </div>
+                        <div class="nudge-step-group">
+                            <button type="button" class="nudge-step active" data-step="4">4px</button>
+                            <button type="button" class="nudge-step" data-step="16">16px</button>
+                        </div>
                     </div>
 
-                    <div class="bar" style="margin-top: 8px;">
-                        <button id="pos-reset-item" class="btn">Reset selected</button>
+                    <!-- Layout Flow & Auto-Fit Card -->
+                    <div class="layout-distribution-card">
+                        <div class="dist-header">
+                            <span>Overall Vertical Spacing</span>
+                            <button type="button" class="btn btn-sm btn-primary" id="btn-auto-fit" title="Automatically space and fit all text on canvas" style="background:var(--acc);color:#fff;border-color:var(--fg);">✨ Auto-Fit &amp; Space</button>
+                        </div>
+                        <div class="pos-control-row" style="margin-top: 6px;">
+                            <div class="pos-control-label">
+                                <span>Block gap multiplier</span>
+                                <span id="gap-val" class="pos-val">1.0x</span>
+                            </div>
+                            <input type="range" id="gap-slider" min="0.2" max="2.0" step="0.05" value="1.0">
+                        </div>
+                    </div>
+
+                    <div class="bar" style="margin-top: 10px;">
+                        <button id="pos-reset-item" class="btn">Reset active item</button>
                         <button id="rp-all" class="btn">Reset all positions</button>
                     </div>
-                    <p class="note">You can also drag elements directly on the flyer preview with your mouse or finger.
-                    </p>
+                    <p class="note">Tip: Click and drag any text or photo directly on the flyer preview to move it.</p>
                 </details>
 
                 <details id="sec-photo">
@@ -998,6 +1214,7 @@
 
         const Z = () => ({ t: [0, 0], i: [0, 0], m: [0, 0], p: [0, 0] });
         const J = () => ({ t: 0, i: 0, m: 0, p: 0 });
+        const AL = () => ({ t: null, i: null, m: null });
 
         let S = {
             style: 'riso',
@@ -1007,21 +1224,39 @@
             tw: 800,
             bw: 500,
             ts: 1,
+            bs: 1,
+            gap: 1,
             lay: 0,
             tex: 'grain',
             seed: 7,
             jit: J(),
             pos: Z(),
+            al: AL(),
             ps: 1,
             safe: 0,
             f: { ...EX[0] }
         };
 
         let PH = {}, hist = [], hi = -1, FL = {}, B = [];
+        let activeTarget = 't';
+        let currentNudgeStep = 4;
 
         try {
             const j = JSON.parse(localStorage.fl);
-            if (j && j.f) S = Object.assign({}, S, j);
+            if (j && j.f) {
+                S = Object.assign({}, S, j);
+                if (S.bs === undefined) S.bs = 1;
+                if (S.gap === undefined) S.gap = 1;
+                if (!S.al) S.al = AL();
+                if (!S.pos) S.pos = Z();
+                if (!S.jit) S.jit = J();
+            }
+        } catch (e) { }
+
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('asp') && ASP[urlParams.get('asp')]) S.asp = urlParams.get('asp');
+            if (urlParams.has('fresh')) S.pos = Z();
         } catch (e) { }
 
         // Noise pattern canvas for grain
@@ -1133,6 +1368,10 @@
             c.globalCompositeOperation = 'source-over';
 
             const [pa, a, b] = S.pal, r = rng(S.seed + 1), st = S.style, L = LAY[S.lay], f = S.f, [tf, bf] = PR[S.font], mw = W * .84, bx = [];
+            const baseDim = Math.min(W, H * 0.88);
+            const bodyScale = (S.bs || 1);
+            const titleScale = (S.ts || 1);
+            const gapScale = (S.gap || 1);
 
             // Base Paper
             c.fillStyle = pa;
@@ -1248,81 +1487,164 @@
                 return o;
             };
 
+            // 1. Pre-calculate Title
+            let tt = st == 'print' ? (f.title || '').toUpperCase() : (f.title || '');
+            let ts = baseDim * 0.155 * titleScale;
+            F(S.tw, ts, tf);
+            let titleLines = tt ? wrap(tt, mw) : [];
+            while (titleLines.length * ts * 0.98 > H * 0.32 && ts > 18) {
+                ts *= 0.92;
+                F(S.tw, ts, tf);
+                titleLines = wrap(tt, mw);
+            }
+            let th = titleLines.length ? titleLines.length * ts * 0.98 : 0;
+
+            // 2. Pre-calculate Info block
+            const infoList = [
+                ['When', [f.date, f.time].filter(Boolean).join(' · ')],
+                ['Where', [f.venue, f.addr].filter(Boolean).join('\n')],
+                ['Host', f.host]
+            ].filter(([_, v]) => Boolean(v));
+
+            let infoHeaderAdv = baseDim * 0.034 * bodyScale;
+            let infoLineAdv = baseDim * 0.048 * bodyScale;
+            let infoItemGap = baseDim * 0.015 * bodyScale;
+            let ih = 0;
+            const measuredInfo = [];
+            F(S.bw, baseDim * 0.038 * bodyScale, bf);
+            for (const [l, v] of infoList) {
+                const lines = wrap(v, mw);
+                measuredInfo.push({ label: l, valLines: lines });
+                ih += infoHeaderAdv + lines.length * infoLineAdv + infoItemGap;
+            }
+
+            // 3. Pre-calculate Copy / Details block
+            const copyList = [];
+            if (f.sell) copyList.push({ t: f.sell, sz: baseDim * 0.044 * bodyScale, w: S.bw, fam: tf, col: a, isRsvp: false });
+            if (f.details) copyList.push({ t: f.details.split('\n').filter(Boolean).map(x => '— ' + x).join('\n'), sz: baseDim * 0.031 * bodyScale, w: S.bw, fam: bf, col: a, isRsvp: false });
+            if (f.perks) copyList.push({ t: f.perks, sz: baseDim * 0.031 * bodyScale, w: S.bw, fam: bf, col: a, isRsvp: false });
+            if (f.hidden) copyList.push({ t: f.hidden, sz: baseDim * 0.026 * bodyScale, w: 400, fam: bf, col: a, isRsvp: false });
+            if (f.rsvp) copyList.push({ t: 'Next: ' + f.rsvp, sz: baseDim * 0.033 * bodyScale, w: 700, fam: bf, col: b, isRsvp: true });
+
+            let mh = 0;
+            for (const item of copyList) {
+                F(item.w, item.sz, item.fam);
+                item.lines = wrap(item.t, mw);
+                item.stepH = item.sz * 1.3;
+                item.padH = item.sz * 0.35;
+                mh += item.lines.length * item.stepH + item.padH;
+            }
+
+            // 4. Intelligent Auto-Fit Scaling (Guarantees all text is visible on ANY canvas size)
+            const topMargin = Math.max(26, H * 0.055);
+            const botMargin = Math.max(26, H * 0.055);
+            const availH = H - topMargin - botMargin;
+            let totH = th + ih + mh;
+
+            if (totH > availH - 24 && totH > 0) {
+                const autoRatio = Math.max(0.64, (availH - 24) / totH);
+                ts *= autoRatio;
+                th *= autoRatio;
+                infoHeaderAdv *= autoRatio;
+                infoLineAdv *= autoRatio;
+                infoItemGap *= autoRatio;
+                ih *= autoRatio;
+                for (const item of copyList) {
+                    item.sz *= autoRatio;
+                    item.stepH *= autoRatio;
+                    item.padH *= autoRatio;
+                }
+                mh *= autoRatio;
+                totH = th + ih + mh;
+            }
+
+            // 5. Natural Balanced Spacing between Blocks
+            const remainingSpace = Math.max(10, availH - totH);
+            const baseBlockGap = Math.max(12, (remainingSpace / 2.6) * gapScale);
+
+            const baseY = { t: 0, i: 0, m: 0 };
+            if (S.lay === 1) {
+                // Info top, Title mid, Copy lower
+                baseY.i = topMargin + (remainingSpace - baseBlockGap * 2) * 0.22;
+                baseY.t = baseY.i + ih + baseBlockGap;
+                baseY.m = baseY.t + th + baseBlockGap;
+            } else {
+                // Layout 0, 2, 3: Title top, Info mid, Copy lower
+                baseY.t = topMargin + (remainingSpace - baseBlockGap * 2) * 0.22;
+                baseY.i = baseY.t + th + baseBlockGap;
+                baseY.m = baseY.i + ih + baseBlockGap;
+            }
+
+            const defaultAl = [0, 0, 1, 2][S.lay];
+            const getAl = k => (S.al && S.al[k] !== undefined && S.al[k] !== null ? S.al[k] : defaultAl);
+            const getBaseX = k => {
+                const al = getAl(k);
+                if (al === 1) return W * 0.50;
+                if (al === 2) return W * 0.92;
+                return W * 0.08;
+            };
+
             const blk = (k, fn) => {
-                const [x0, y0, al] = L[k], ox = W * x0 + S.pos[k][0], oy = H * y0 + S.pos[k][1];
+                const al = getAl(k);
+                const ox = getBaseX(k) + S.pos[k][0];
+                const oy = baseY[k] + S.pos[k][1];
                 c.save();
                 c.translate(ox, oy);
                 c.rotate(S.jit[k] * PI / 180);
                 c.textAlign = ['left', 'center', 'right'][al];
                 c.textBaseline = 'top';
-                const h = fn();
+                const h = fn(al);
                 c.restore();
-                bx.push({ k, x: ox - [0, mw / 2, mw][al], y: oy, w: mw, h });
+                const boxX = ox - [0, mw / 2, mw][al];
+                bx.push({ k, x: boxX, y: oy, w: mw, h });
             };
 
-            // Title block (t)
+            // Render Title block (t)
             blk('t', () => {
-                let s = W * .16 * S.ts, tt = st == 'print' ? (f.title || '').toUpperCase() : (f.title || '');
-                F(S.tw, s, tf);
-                let ls = wrap(tt, mw);
-                while (ls.length * s * .98 > H * .36 && s > 18) {
-                    s *= .92;
-                    F(S.tw, s, tf);
-                    ls = wrap(tt, mw);
-                }
-                ls.forEach((l, i) => {
+                F(S.tw, ts, tf);
+                titleLines.forEach((l, i) => {
                     if (st == 'clip') {
                         c.fillStyle = b;
-                        c.fillText(l, 4, i * s * .98 + 4);
+                        c.fillText(l, 4, i * ts * .98 + 4);
                     }
                     c.fillStyle = a;
-                    c.fillText(l, 0, i * s * .98);
+                    c.fillText(l, 0, i * ts * .98);
                 });
-                return ls.length * s;
+                return th;
             });
 
-            // Info block (i)
+            // Render Info block (i)
             blk('i', () => {
                 let y = 0;
-                [
-                    ['When', [f.date, f.time].filter(Boolean).join(' · ')],
-                    ['Where', [f.venue, f.addr].filter(Boolean).join('\n')],
-                    ['Host', f.host]
-                ].forEach(([l, v]) => {
-                    if (!v) return;
-                    F(700, W * .024, bf);
+                measuredInfo.forEach(({ label, valLines }) => {
+                    F(700, baseDim * 0.024 * bodyScale, bf);
                     c.fillStyle = b;
-                    c.fillText(l.toUpperCase(), 0, y);
-                    y += W * .036;
-                    F(S.bw, W * .042, bf);
+                    c.fillText(label.toUpperCase(), 0, y);
+                    y += infoHeaderAdv;
+                    F(S.bw, baseDim * 0.038 * bodyScale, bf);
                     c.fillStyle = a;
-                    wrap(v, mw).forEach(t => {
+                    valLines.forEach(t => {
                         c.fillText(t, 0, y);
-                        y += W * .054;
+                        y += infoLineAdv;
                     });
-                    y += W * .016;
+                    y += infoItemGap;
                 });
-                return y;
+                return ih;
             });
 
-            // Main details block (m)
+            // Render Main details block (m)
             blk('m', () => {
                 let y = 0;
-                const T = (t, sz, w, fam, col) => {
-                    F(w, sz, fam);
-                    c.fillStyle = col;
-                    wrap(t, mw).forEach(l => {
+                copyList.forEach(it => {
+                    F(it.w, it.sz, it.fam);
+                    c.fillStyle = it.col;
+                    it.lines.forEach(l => {
                         c.fillText(l, 0, y);
-                        y += sz * 1.3;
+                        y += it.stepH;
                     });
-                    y += sz * .35;
-                };
-                f.sell && T(f.sell, W * .045, S.bw, tf, a);
-                f.details && T(f.details.split('\n').filter(Boolean).map(x => '— ' + x).join('\n'), W * .032, S.bw, bf, a);
-                f.perks && T(f.perks, W * .032, S.bw, bf, a);
-                f.hidden && T(f.hidden, W * .028, 400, bf, a);
-                f.rsvp && T('Next: ' + f.rsvp, W * .034, 700, bf, b);
-                return y;
+                    y += it.padH;
+                });
+                return mh;
             });
 
             // Textures rendering
@@ -1420,12 +1742,10 @@
                 const botY = H * 0.875;
                 const botH = H * 0.125;
 
-                // Subtle tint
                 c.fillStyle = 'rgba(255, 60, 60, 0.15)';
                 c.fillRect(0, 0, W, topH);
                 c.fillRect(0, botY, W, botH);
 
-                // Dashed boundary guides
                 c.strokeStyle = '#ff3b30';
                 c.lineWidth = 2;
                 c.setLineDash([6, 4]);
@@ -1435,12 +1755,47 @@
                 c.stroke();
                 c.setLineDash([]);
 
-                // Informative label badges
                 c.font = `700 ${Math.max(10, W * 0.02)}px "Space Mono", monospace`;
                 c.fillStyle = '#ff3b30';
                 c.textAlign = 'center';
                 c.fillText('TOP SAFE ZONE · AVATAR & CONTROLS (~10%)', W / 2, topH / 2);
                 c.fillText('BOTTOM SAFE ZONE · REPLY & ACTIONS (~12%)', W / 2, botY + botH / 2);
+            }
+
+            // Active visual element selection indicator (preview mode only)
+            if (pv && activeTarget) {
+                const activeBox = bx.find(box => box.k === activeTarget);
+                if (activeBox) {
+                    c.save();
+                    const pad = 6;
+                    c.strokeStyle = '#ff4f2e';
+                    c.lineWidth = 2;
+                    c.setLineDash([5, 4]);
+                    c.strokeRect(activeBox.x - pad, activeBox.y - pad, activeBox.w + pad * 2, activeBox.h + pad * 2);
+                    c.setLineDash([]);
+                    
+                    // 4 corner grips
+                    c.fillStyle = '#ff4f2e';
+                    const sz = 6;
+                    c.fillRect(activeBox.x - pad - sz / 2, activeBox.y - pad - sz / 2, sz, sz);
+                    c.fillRect(activeBox.x + activeBox.w + pad - sz / 2, activeBox.y - pad - sz / 2, sz, sz);
+                    c.fillRect(activeBox.x - pad - sz / 2, activeBox.y + activeBox.h + pad - sz / 2, sz, sz);
+                    c.fillRect(activeBox.x + activeBox.w + pad - sz / 2, activeBox.y + activeBox.h + pad - sz / 2, sz, sz);
+
+                    // Badge at top-left
+                    const nameMap = { t: 'Title', i: 'Event Info', m: 'Details & Copy', p: 'Photo' };
+                    const label = '✦ ' + (nameMap[activeTarget] || activeTarget);
+                    c.font = '700 11px "Space Mono", monospace';
+                    const tw = c.measureText(label).width;
+                    const by = Math.max(3, activeBox.y - pad - 19);
+                    c.fillStyle = '#ff4f2e';
+                    c.fillRect(activeBox.x - pad, by, tw + 12, 17);
+                    c.fillStyle = '#ffffff';
+                    c.textAlign = 'left';
+                    c.textBaseline = 'middle';
+                    c.fillText(label, activeBox.x - pad + 6, by + 8.5);
+                    c.restore();
+                }
             }
 
             return bx;
@@ -1450,14 +1805,28 @@
             const w = [], [pa, a, b] = S.pal;
             if (getContrast(a, pa) < 4.5) w.push('Main text on paper is low contrast (' + getContrast(a, pa).toFixed(1) + ':1).');
             if (getContrast(b, pa) < 3) w.push('Accent color is hard to read on paper.');
-            if (bx.some(x => x.k != 'p' && x.y + x.h > H - 6)) {
-                w.push('Text runs off the page. Use the Position sliders, shrink the title, or trim copy.');
+            if (bx.some(x => x.k != 'p' && (x.y + x.h > H - 4 || x.y < 0))) {
+                w.push('Text extends beyond the canvas edge. <button type="button" class="btn btn-sm" id="btn-fix-fit" style="margin-left:8px;padding:2px 8px!important;min-height:22px!important;font-size:11px!important;background:var(--acc);color:#fff;">✨ Auto-Fit to Canvas</button>');
             }
             const all = Object.values(S.f).join(' ');
             if (/good vibes|great people|good times|fun hangs|you.?re invited to a/i.test(all)) w.push('Copy lint: say what happens instead of announcing the vibe.');
             if (/!!/.test(all)) w.push('Copy lint: stacked exclamation marks.');
             if ((S.f.details || S.f.perks) && !S.f.rsvp) w.push('No next step yet. How should people reply?');
             $('#warn').innerHTML = w.length ? w.map(x => '<li>' + x + '</li>').join('') : '<li>Looks readable. ✓</li>';
+            const fixBtn = $('#btn-fix-fit');
+            if (fixBtn) {
+                fixBtn.onclick = () => {
+                    S.pos = Z();
+                    S.jit = J();
+                    S.gap = 1;
+                    S.bs = 1;
+                    S.ts = 1;
+                    if (S.al) S.al = AL();
+                    updatePosControls();
+                    render();
+                    push();
+                };
+            }
         }
 
         function ensure() {
@@ -1476,17 +1845,77 @@
         }
 
         function updatePosControls() {
-            const target = $('#pos-target').value;
-            const pos = S.pos[target] || [0, 0];
-            const jit = S.jit[target] || 0;
+            const target = activeTarget || 't';
+            const pos = (S.pos && S.pos[target]) ? S.pos[target] : [0, 0];
+            const jit = (S.jit && S.jit[target] !== undefined) ? S.jit[target] : 0;
 
-            $('#pos-x').value = pos[0];
-            $('#pos-y').value = pos[1];
-            $('#pos-rot').value = jit;
+            // Update Target Tabs
+            document.querySelectorAll('#pos-target-tabs .target-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.target === target);
+            });
+            if ($('#pos-target')) $('#pos-target').value = target;
 
-            $('#pos-x-val').textContent = (pos[0] > 0 ? '+' : '') + Math.round(pos[0]) + ' px';
-            $('#pos-y-val').textContent = (pos[1] > 0 ? '+' : '') + Math.round(pos[1]) + ' px';
-            $('#pos-rot-val').textContent = (jit > 0 ? '+' : '') + jit.toFixed(1) + '°';
+            // Update Active Item Title
+            const titles = {
+                t: 'Title Placement',
+                i: 'Event Info Placement',
+                m: 'Details Placement',
+                p: 'Photo Placement'
+            };
+            const titleEl = $('#active-item-title');
+            if (titleEl) titleEl.textContent = titles[target] || 'Item Placement';
+
+            // Update Alignment Buttons (active state)
+            const defaultAl = [0, 0, 1, 2][S.lay];
+            const curAl = (S.al && S.al[target] !== undefined && S.al[target] !== null) ? S.al[target] : defaultAl;
+            document.querySelectorAll('#pos-align-group .align-btn').forEach(btn => {
+                btn.classList.toggle('active', +btn.dataset.align === curAl);
+            });
+
+            // Update X & Y Sliders & Readouts
+            const posXInput = $('#pos-x'), posYInput = $('#pos-y'), rotInput = $('#pos-rot');
+            if (posXInput) posXInput.value = pos[0];
+            if (posYInput) posYInput.value = pos[1];
+            if (rotInput) rotInput.value = jit;
+
+            const posXVal = $('#pos-x-val'), posYVal = $('#pos-y-val'), rotVal = $('#pos-rot-val');
+            if (posXVal) posXVal.textContent = (pos[0] > 0 ? '+' : '') + Math.round(pos[0]) + ' px';
+            if (posYVal) posYVal.textContent = (pos[1] > 0 ? '+' : '') + Math.round(pos[1]) + ' px';
+            if (rotVal) rotVal.textContent = (jit > 0 ? '+' : '') + jit.toFixed(1) + '°';
+
+            // Update Scale Slider for selected item
+            const scaleRow = $('#item-scale-row'), scaleLabel = $('#scale-label'), scaleSlider = $('#scale-slider'), scaleVal = $('#scale-val');
+            if (scaleSlider && scaleLabel && scaleVal && scaleRow) {
+                if (target === 't') {
+                    scaleLabel.textContent = 'Title size scale';
+                    scaleSlider.min = '0.5';
+                    scaleSlider.max = '1.6';
+                    scaleSlider.value = S.ts || 1;
+                    scaleVal.textContent = Math.round((S.ts || 1) * 100) + '%';
+                    scaleRow.style.display = 'flex';
+                } else if (target === 'i' || target === 'm') {
+                    scaleLabel.textContent = 'Body text size scale';
+                    scaleSlider.min = '0.5';
+                    scaleSlider.max = '1.5';
+                    scaleSlider.value = S.bs || 1;
+                    scaleVal.textContent = Math.round((S.bs || 1) * 100) + '%';
+                    scaleRow.style.display = 'flex';
+                } else if (target === 'p') {
+                    scaleLabel.textContent = 'Photo size scale';
+                    scaleSlider.min = '0.3';
+                    scaleSlider.max = '2.0';
+                    scaleSlider.value = S.ps || 1;
+                    scaleVal.textContent = Math.round((S.ps || 1) * 100) + '%';
+                    scaleRow.style.display = 'flex';
+                }
+            }
+
+            // Update Gap Slider & Readout
+            const gapSlider = $('#gap-slider'), gapVal = $('#gap-val');
+            if (gapSlider && gapVal) {
+                gapSlider.value = S.gap || 1;
+                gapVal.textContent = (S.gap || 1).toFixed(2) + 'x';
+            }
         }
 
         function render() {
@@ -1553,9 +1982,13 @@
             S.pal.forEach((v, i) => $('#c' + i).value = v);
             $('#fo').value = S.font;
             $('#tex').value = S.tex;
-            ['tw', 'bw', 'ts', 'ps'].forEach(k => $('#' + k).value = S[k]);
+            ['tw', 'bw', 'ts', 'bs', 'ps'].forEach(k => {
+                const el = $('#' + k);
+                if (el) el.value = S[k] !== undefined ? S[k] : 1;
+            });
             $('#safe').checked = !!S.safe;
             FD.forEach(([k]) => $('#f_' + k).value = S.f[k] || '');
+            updatePosControls();
             render();
         }
 
@@ -1623,10 +2056,12 @@
             e.onchange = push;
         });
 
-        ['tw', 'bw', 'ts', 'ps'].forEach(k => {
+        ['tw', 'bw', 'ts', 'bs', 'ps'].forEach(k => {
             const e = $('#' + k);
-            e.oninput = () => { S[k] = +e.value; render(); sv(); };
-            e.onchange = push;
+            if (e) {
+                e.oninput = () => { S[k] = +e.value; render(); sv(); };
+                e.onchange = push;
+            }
         });
 
         [0, 1, 2].forEach(i => {
@@ -1643,6 +2078,7 @@
             S.tex = s.x;
             S.lay = s.l;
             S.pos = Z();
+            S.gap = 1;
             S.jit = v == 'zine' ? { t: -2, i: 1, m: 0, p: 3 } : J();
             sync();
             push();
@@ -1654,53 +2090,140 @@
         $('#safe').onchange = () => { S.safe = +$('#safe').checked; render(); push(); };
 
         // Position & Nudge Sliders & Buttons
-        $('#pos-target').onchange = updatePosControls;
+        document.querySelectorAll('#pos-target-tabs .target-tab').forEach(btn => {
+            btn.onclick = () => {
+                activeTarget = btn.dataset.target;
+                updatePosControls();
+                render();
+            };
+        });
+
+        if ($('#pos-target')) {
+            $('#pos-target').onchange = () => {
+                activeTarget = $('#pos-target').value;
+                updatePosControls();
+                render();
+            };
+        }
+
+        document.querySelectorAll('#pos-align-group .align-btn').forEach(btn => {
+            btn.onclick = () => {
+                if (!S.al) S.al = AL();
+                S.al[activeTarget] = +btn.dataset.align;
+                updatePosControls();
+                render();
+                push();
+            };
+        });
 
         $('#pos-x').oninput = () => {
-            const target = $('#pos-target').value;
-            S.pos[target][0] = +$('#pos-x').value;
-            $('#pos-x-val').textContent = (S.pos[target][0] > 0 ? '+' : '') + Math.round(S.pos[target][0]) + ' px';
+            S.pos[activeTarget][0] = +$('#pos-x').value;
+            $('#pos-x-val').textContent = (S.pos[activeTarget][0] > 0 ? '+' : '') + Math.round(S.pos[activeTarget][0]) + ' px';
             render();
             sv();
         };
         $('#pos-x').onchange = push;
 
         $('#pos-y').oninput = () => {
-            const target = $('#pos-target').value;
-            S.pos[target][1] = +$('#pos-y').value;
-            $('#pos-y-val').textContent = (S.pos[target][1] > 0 ? '+' : '') + Math.round(S.pos[target][1]) + ' px';
+            S.pos[activeTarget][1] = +$('#pos-y').value;
+            $('#pos-y-val').textContent = (S.pos[activeTarget][1] > 0 ? '+' : '') + Math.round(S.pos[activeTarget][1]) + ' px';
             render();
             sv();
         };
         $('#pos-y').onchange = push;
 
-        $('#pos-rot').oninput = () => {
-            const target = $('#pos-target').value;
-            S.jit[target] = +$('#pos-rot').value;
-            $('#pos-rot-val').textContent = (S.jit[target] > 0 ? '+' : '') + S.jit[target].toFixed(1) + '°';
-            render();
-            sv();
-        };
-        $('#pos-rot').onchange = push;
-
-        const nudge = (dx, dy) => {
-            const target = $('#pos-target').value;
-            S.pos[target][0] += dx;
-            S.pos[target][1] += dy;
+        $('#reset-x').onclick = () => {
+            S.pos[activeTarget][0] = 0;
             updatePosControls();
             render();
             push();
         };
 
-        $('#nudge-up').onclick = () => nudge(0, -6);
-        $('#nudge-down').onclick = () => nudge(0, 6);
-        $('#nudge-left').onclick = () => nudge(-6, 0);
-        $('#nudge-right').onclick = () => nudge(6, 0);
+        $('#reset-y').onclick = () => {
+            S.pos[activeTarget][1] = 0;
+            updatePosControls();
+            render();
+            push();
+        };
+
+        $('#reset-rot').onclick = () => {
+            S.jit[activeTarget] = 0;
+            updatePosControls();
+            render();
+            push();
+        };
+
+        $('#scale-slider').oninput = () => {
+            const val = +$('#scale-slider').value;
+            if (activeTarget === 't') {
+                S.ts = val;
+                if ($('#ts')) $('#ts').value = val;
+            } else if (activeTarget === 'i' || activeTarget === 'm') {
+                S.bs = val;
+                if ($('#bs')) $('#bs').value = val;
+            } else if (activeTarget === 'p') {
+                S.ps = val;
+                if ($('#ps')) $('#ps').value = val;
+            }
+            $('#scale-val').textContent = Math.round(val * 100) + '%';
+            render();
+            sv();
+        };
+        $('#scale-slider').onchange = push;
+
+        $('#pos-rot').oninput = () => {
+            S.jit[activeTarget] = +$('#pos-rot').value;
+            $('#pos-rot-val').textContent = (S.jit[activeTarget] > 0 ? '+' : '') + S.jit[activeTarget].toFixed(1) + '°';
+            render();
+            sv();
+        };
+        $('#pos-rot').onchange = push;
+
+        $('#gap-slider').oninput = () => {
+            S.gap = +$('#gap-slider').value;
+            $('#gap-val').textContent = (S.gap).toFixed(2) + 'x';
+            render();
+            sv();
+        };
+        $('#gap-slider').onchange = push;
+
+        $('#btn-auto-fit').onclick = () => {
+            S.pos = Z();
+            S.jit = J();
+            S.gap = 1;
+            S.bs = 1;
+            S.ts = 1;
+            if (S.al) S.al = AL();
+            updatePosControls();
+            render();
+            push();
+        };
+
+        document.querySelectorAll('.nudge-step').forEach(btn => {
+            btn.onclick = () => {
+                currentNudgeStep = +btn.dataset.step;
+                document.querySelectorAll('.nudge-step').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            };
+        });
+
+        const nudge = (dx, dy) => {
+            S.pos[activeTarget][0] += dx * currentNudgeStep;
+            S.pos[activeTarget][1] += dy * currentNudgeStep;
+            updatePosControls();
+            render();
+            push();
+        };
+
+        $('#nudge-up').onclick = () => nudge(0, -1);
+        $('#nudge-down').onclick = () => nudge(0, 1);
+        $('#nudge-left').onclick = () => nudge(-1, 0);
+        $('#nudge-right').onclick = () => nudge(1, 0);
 
         $('#pos-reset-item').onclick = () => {
-            const target = $('#pos-target').value;
-            S.pos[target] = [0, 0];
-            S.jit[target] = 0;
+            S.pos[activeTarget] = [0, 0];
+            S.jit[activeTarget] = 0;
+            if (S.al) S.al[activeTarget] = null;
             updatePosControls();
             render();
             push();
@@ -1709,6 +2232,8 @@
         $('#rp-all').onclick = () => {
             S.pos = Z();
             S.jit = J();
+            S.gap = 1;
+            if (S.al) S.al = AL();
             updatePosControls();
             render();
             push();
@@ -1849,22 +2374,27 @@
             const r = cv.getBoundingClientRect(), s = r.width / ASP[S.asp][0], x = (e.clientX - r.left) / s, y = (e.clientY - r.top) / s;
             const h = [...B].reverse().find(b => x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h);
             if (h) {
+                activeTarget = h.k;
                 dg = { k: h.k, x, y, p: [...S.pos[h.k]], s };
                 cv.setPointerCapture(e.pointerId);
-                // Synchronize position panel target
-                $('#pos-target').value = h.k;
                 updatePosControls();
+                render();
             }
         };
 
         cv.onpointermove = e => {
-            if (!dg) return;
-            const r = cv.getBoundingClientRect();
-            S.pos[dg.k] = [
-                Math.round(dg.p[0] + (e.clientX - r.left) / dg.s - dg.x),
-                Math.round(dg.p[1] + (e.clientY - r.top) / dg.s - dg.y)
-            ];
-            render();
+            const r = cv.getBoundingClientRect(), s = r.width / ASP[S.asp][0], x = (e.clientX - r.left) / s, y = (e.clientY - r.top) / s;
+            if (dg) {
+                S.pos[dg.k] = [
+                    Math.round(dg.p[0] + x - dg.x),
+                    Math.round(dg.p[1] + y - dg.y)
+                ];
+                render();
+                updatePosControls();
+            } else {
+                const hover = [...B].reverse().find(b => x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h);
+                cv.style.cursor = hover ? 'grab' : 'default';
+            }
         };
 
         cv.onpointerup = cv.onpointercancel = () => {
