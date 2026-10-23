@@ -1,6 +1,6 @@
 # Flyer Maker
 
-A browser-based flyer and invite maker for events that should look like a person made them, not a template or a machine.
+A browser-based flyer and invite maker for events that should look like a person made them, not an AI chatbot.
 
 Most generated invites share the same tells: neon palettes, confetti, clip-art icons on every line, every inch filled, and copy that announces the vibe instead of showing it. Flyer Maker is built to avoid those. It gives you real design constraints, plenty of control, and a little controlled randomness, so you can fix a typo or move one word without regenerating the whole thing or opening a full design suite.
 
