@@ -434,10 +434,28 @@
             transition: background 0.1s, color 0.1s;
         }
 
-        .btn-micro:hover {
+        .btn-micro:hover:not(:disabled) {
             background: var(--acc);
             color: #fff;
             border-color: var(--fg);
+        }
+
+        .btn-micro:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .pos-item-controls-disabled {
+            opacity: 0.45;
+            pointer-events: none;
+            user-select: none;
+            transition: opacity 0.15s ease;
+        }
+
+        input[type="range"]:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
         }
 
         .nudge-bar {
@@ -629,7 +647,7 @@
 
         .shuffle-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 8px;
             margin: 10px 0;
         }
@@ -648,6 +666,18 @@
             font-weight: 700;
             text-align: center;
             box-shadow: 2px 2px 0 var(--fg);
+            cursor: pointer;
+            transition: background 0.12s, transform 0.08s, box-shadow 0.08s;
+            user-select: none;
+        }
+
+        .shuffle-item:hover {
+            background: var(--card);
+        }
+
+        .shuffle-item:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--fg);
         }
 
         .btn,
@@ -885,7 +915,7 @@
             <!-- Left Controls Column (Scrolls independently on desktop) -->
             <div class="controls-col" id="controls">
                 <details id="sec-words" open>
-                    <summary>Words</summary>
+                    <summary>Information</summary>
                     <div id="fields"></div>
                     <div class="bar" style="margin-top: 10px; justify-content: space-between;">
                         <button id="clr">Clear examples</button>
@@ -927,6 +957,7 @@
                         <div class="shuffle-item"><span>Layout</span><i data-d="lay"></i></div>
                         <div class="shuffle-item"><span>Texture</span><i data-d="tex_btn"></i></div>
                         <div class="shuffle-item"><span>Scatter &amp; tilt</span><i data-d="jit"></i></div>
+                        <div class="shuffle-item"><span>Background decor</span><i data-d="bg"></i></div>
                     </div>
                 </details>
 
@@ -936,7 +967,7 @@
 
                     <!-- Element Selector Tabs -->
                     <div class="target-tabs" id="pos-target-tabs" role="tablist">
-                        <button type="button" class="target-tab active" data-target="t">Title</button>
+                        <button type="button" class="target-tab" data-target="t">Title</button>
                         <button type="button" class="target-tab" data-target="i">Event Info</button>
                         <button type="button" class="target-tab" data-target="m">Details</button>
                         <button type="button" class="target-tab" data-target="p">Photo</button>
@@ -944,6 +975,7 @@
 
                     <!-- Hidden select for programmatic sync -->
                     <select id="pos-target" style="display:none;">
+                        <option value="">(None)</option>
                         <option value="t">Title</option>
                         <option value="i">Event Info</option>
                         <option value="m">Details</option>
@@ -952,9 +984,13 @@
 
                     <!-- Active Item Header & Alignment Group -->
                     <div class="pos-item-header">
-                        <span id="active-item-title" class="pos-active-title">Title Placement</span>
+                        <div style="display:flex;align-items:center;gap:6px;min-width:0;">
+                            <span id="active-item-title" class="pos-active-title">No Item Selected</span>
+                            <button type="button" class="btn-micro" id="btn-deselect" title="Deselect item"
+                                style="display:none;padding:1px 6px;font-size:10px;">✕ Unselect</button>
+                        </div>
                         <div class="align-btn-group" id="pos-align-group">
-                            <button type="button" class="btn align-btn active" data-align="0" id="al-left"
+                            <button type="button" class="btn align-btn" data-align="0" id="al-left"
                                 title="Align Left">Left</button>
                             <button type="button" class="btn align-btn" data-align="1" id="al-center"
                                 title="Align Center">Center</button>
@@ -963,66 +999,74 @@
                         </div>
                     </div>
 
-                    <!-- Vertical Y Slider -->
-                    <div class="pos-control-row">
-                        <div class="pos-control-label">
-                            <span>Vertical position (Y axis)</span>
-                            <div class="pos-val-group">
-                                <span id="pos-y-val" class="pos-val">0 px</span>
-                                <button type="button" class="btn-micro" id="reset-y"
-                                    title="Reset Y position to 0">0</button>
+                    <p id="pos-no-sel-hint" class="note" style="margin:4px 0 8px;font-style:italic;">Click any element
+                        on the flyer preview or choose a tab above to move and tilt it.</p>
+
+                    <div id="pos-item-controls" class="pos-item-controls-disabled">
+                        <!-- Vertical Y Slider -->
+                        <div class="pos-control-row">
+                            <div class="pos-control-label">
+                                <span>Vertical position (Y axis)</span>
+                                <div class="pos-val-group">
+                                    <span id="pos-y-val" class="pos-val">—</span>
+                                    <button type="button" class="btn-micro" id="reset-y"
+                                        title="Reset Y position to 0">0</button>
+                                </div>
                             </div>
+                            <input type="range" id="pos-y" min="-500" max="500" step="1" value="0" disabled>
                         </div>
-                        <input type="range" id="pos-y" min="-500" max="500" step="1" value="0">
-                    </div>
 
-                    <!-- Horizontal X Slider -->
-                    <div class="pos-control-row">
-                        <div class="pos-control-label">
-                            <span>Horizontal position (X axis)</span>
-                            <div class="pos-val-group">
-                                <span id="pos-x-val" class="pos-val">0 px</span>
-                                <button type="button" class="btn-micro" id="reset-x"
-                                    title="Reset X position to 0">0</button>
+                        <!-- Horizontal X Slider -->
+                        <div class="pos-control-row">
+                            <div class="pos-control-label">
+                                <span>Horizontal position (X axis)</span>
+                                <div class="pos-val-group">
+                                    <span id="pos-x-val" class="pos-val">—</span>
+                                    <button type="button" class="btn-micro" id="reset-x"
+                                        title="Reset X position to 0">0</button>
+                                </div>
                             </div>
+                            <input type="range" id="pos-x" min="-400" max="400" step="1" value="0" disabled>
                         </div>
-                        <input type="range" id="pos-x" min="-400" max="400" step="1" value="0">
-                    </div>
 
-                    <!-- Item Scale / Size Slider -->
-                    <div class="pos-control-row" id="item-scale-row">
-                        <div class="pos-control-label">
-                            <span id="scale-label">Item text size</span>
-                            <span id="scale-val" class="pos-val">100%</span>
-                        </div>
-                        <input type="range" id="scale-slider" min="0.5" max="1.6" step="0.05" value="1.0">
-                    </div>
-
-                    <!-- Tilt / Angle Slider -->
-                    <div class="pos-control-row">
-                        <div class="pos-control-label">
-                            <span>Tilt / Angle</span>
-                            <div class="pos-val-group">
-                                <span id="pos-rot-val" class="pos-val">0°</span>
-                                <button type="button" class="btn-micro" id="reset-rot"
-                                    title="Level angle to 0°">0°</button>
+                        <!-- Item Scale / Size Slider -->
+                        <div class="pos-control-row" id="item-scale-row">
+                            <div class="pos-control-label">
+                                <span id="scale-label">Item text size</span>
+                                <span id="scale-val" class="pos-val">—</span>
                             </div>
+                            <input type="range" id="scale-slider" min="0.5" max="1.6" step="0.05" value="1.0" disabled>
                         </div>
-                        <input type="range" id="pos-rot" min="-20" max="20" step="0.5" value="0">
-                    </div>
 
-                    <!-- Nudge Bar with D-Pad & Step Selector -->
-                    <div class="nudge-bar">
-                        <div class="nudge-buttons">
-                            <button type="button" class="btn btn-sm" id="nudge-up" title="Nudge Up">↑ Up</button>
-                            <button type="button" class="btn btn-sm" id="nudge-down" title="Nudge Down">↓ Down</button>
-                            <button type="button" class="btn btn-sm" id="nudge-left" title="Nudge Left">← Left</button>
-                            <button type="button" class="btn btn-sm" id="nudge-right" title="Nudge Right">→
-                                Right</button>
+                        <!-- Tilt / Angle Slider -->
+                        <div class="pos-control-row">
+                            <div class="pos-control-label">
+                                <span>Tilt / Angle</span>
+                                <div class="pos-val-group">
+                                    <span id="pos-rot-val" class="pos-val">—</span>
+                                    <button type="button" class="btn-micro" id="reset-rot"
+                                        title="Level angle to 0°">0°</button>
+                                </div>
+                            </div>
+                            <input type="range" id="pos-rot" min="-180" max="180" step="0.5" value="0" disabled>
                         </div>
-                        <div class="nudge-step-group">
-                            <button type="button" class="nudge-step active" data-step="4">4px</button>
-                            <button type="button" class="nudge-step" data-step="16">16px</button>
+
+                        <!-- Nudge Bar with D-Pad & Step Selector -->
+                        <div class="nudge-bar">
+                            <div class="nudge-buttons">
+                                <button type="button" class="btn btn-sm" id="nudge-up" title="Nudge Up" disabled>↑
+                                    Up</button>
+                                <button type="button" class="btn btn-sm" id="nudge-down" title="Nudge Down" disabled>↓
+                                    Down</button>
+                                <button type="button" class="btn btn-sm" id="nudge-left" title="Nudge Left" disabled>←
+                                    Left</button>
+                                <button type="button" class="btn btn-sm" id="nudge-right" title="Nudge Right" disabled>→
+                                    Right</button>
+                            </div>
+                            <div class="nudge-step-group">
+                                <button type="button" class="nudge-step active" data-step="4">4px</button>
+                                <button type="button" class="nudge-step" data-step="16">16px</button>
+                            </div>
                         </div>
                     </div>
 
@@ -1058,7 +1102,7 @@
                         <button id="rm">Remove</button>
                     </div>
                     <label>Photo size<input type="range" id="ps" min=".3" max="1.8" step=".05"></label>
-                    <div style="margin: 10px 0 4px;">
+                    <div style="margin: 10px 0 4px;" id="photo-blend-group">
                         <span style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">Photo
                             Appearance:</span>
                         <div class="target-tabs" id="photo-blend-tabs" role="tablist">
@@ -1292,7 +1336,7 @@
         };
 
         let PH = {}, hist = [], hi = -1, FL = {}, B = [];
-        let activeTarget = 't';
+        let activeTarget = null;
         let currentNudgeStep = 4;
 
         try {
@@ -1493,16 +1537,28 @@
                     c.fillRect(-38, -11, 76, 22);
                     c.restore();
                 }
+                // Zine squiggly hand-drawn doodle line
+                c.save();
                 c.strokeStyle = b;
-                c.lineWidth = 4;
+                c.lineWidth = 3.5 + r() * 2;
+                c.lineCap = 'round';
+                c.lineJoin = 'round';
                 c.beginPath();
-                let x = W * .08, y = H * .58;
-                c.moveTo(x, y);
-                for (let i = 0; i < 14; i++) {
-                    x += W * .05;
-                    c.lineTo(x, y + (i % 2 ? -8 : 8));
+                const squigY = H * (.42 + (r() - 0.5) * 0.28);
+                const squigTilt = (r() - 0.5) * 0.12;
+                let x = W * (.05 + r() * .06);
+                c.moveTo(x, squigY);
+                const segs = 12 + Math.floor(r() * 6);
+                const step = (W * .82) / segs;
+                const amp = 6 + r() * 7;
+                for (let i = 0; i < segs; i++) {
+                    x += step;
+                    const zig = (i % 2 ? -amp : amp) + (r() - 0.5) * 3;
+                    const tiltY = (x - W * 0.5) * squigTilt;
+                    c.lineTo(x, squigY + zig + tiltY);
                 }
                 c.stroke();
+                c.restore();
             }
 
             // Photo
@@ -1513,7 +1569,7 @@
                 c.translate(x + w / 2, y + h / 2);
                 c.rotate(S.jit.p * PI / 180);
                 const isOpaque = S.photoBlend === 'opaque';
-                if (!isOpaque && (st == 'riso' || st == 'print')) {
+                if (!isOpaque && st == 'riso') {
                     c.globalCompositeOperation = 'multiply';
                 } else {
                     c.globalCompositeOperation = 'source-over';
@@ -1551,8 +1607,9 @@
             let ts = baseDim * 0.155 * titleScale;
             F(S.tw, ts, tf);
             let titleLines = tt ? wrap(tt, mw) : [];
-            while (titleLines.length * ts * 0.98 > H * 0.32 && ts > 18) {
-                ts *= 0.92;
+            const maxTitleH = Math.max(H * 0.35, H * 0.32 * Math.max(1, titleScale * 1.45));
+            while ((titleLines.length * ts * 0.98 > maxTitleH || titleLines.some(l => c.measureText(l).width > mw * 1.04)) && ts > 18) {
+                ts *= 0.96;
                 F(S.tw, ts, tf);
                 titleLines = wrap(tt, mw);
             }
@@ -1594,32 +1651,14 @@
                 mh += item.lines.length * item.stepH + item.padH;
             }
 
-            // 4. Intelligent Auto-Fit Scaling (Guarantees all text is visible on ANY canvas size)
+            // 4. Natural Balanced Spacing between Blocks
             const topMargin = Math.max(26, H * 0.055);
             const botMargin = Math.max(26, H * 0.055);
             const availH = H - topMargin - botMargin;
-            let totH = th + ih + mh;
+            const totH = th + ih + mh;
 
-            if (totH > availH - 24 && totH > 0) {
-                const autoRatio = Math.max(0.64, (availH - 24) / totH);
-                ts *= autoRatio;
-                th *= autoRatio;
-                infoHeaderAdv *= autoRatio;
-                infoLineAdv *= autoRatio;
-                infoItemGap *= autoRatio;
-                ih *= autoRatio;
-                for (const item of copyList) {
-                    item.sz *= autoRatio;
-                    item.stepH *= autoRatio;
-                    item.padH *= autoRatio;
-                }
-                mh *= autoRatio;
-                totH = th + ih + mh;
-            }
-
-            // 5. Natural Balanced Spacing between Blocks
-            const remainingSpace = Math.max(10, availH - totH);
-            const baseBlockGap = Math.max(12, (remainingSpace / 2.6) * gapScale);
+            const remainingSpace = Math.max(0, availH - totH);
+            const baseBlockGap = Math.max(8, (remainingSpace / 2.6) * gapScale);
 
             const baseY = { t: 0, i: 0, m: 0 };
             if (S.lay === 1) {
@@ -1904,15 +1943,24 @@
         }
 
         function updatePosControls() {
-            const target = activeTarget || 't';
-            const pos = (S.pos && S.pos[target]) ? S.pos[target] : [0, 0];
-            const jit = (S.jit && S.jit[target] !== undefined) ? S.jit[target] : 0;
+            const hasTarget = !!activeTarget;
+            const target = activeTarget;
 
             // Update Target Tabs
             document.querySelectorAll('#pos-target-tabs .target-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.target === target);
+                tab.classList.toggle('active', hasTarget && tab.dataset.target === target);
             });
-            if ($('#pos-target')) $('#pos-target').value = target;
+            if ($('#pos-target')) $('#pos-target').value = target || '';
+
+            // Update Deselect Button & Helper Hint
+            const deselectBtn = $('#btn-deselect');
+            if (deselectBtn) {
+                deselectBtn.style.display = hasTarget ? 'inline-flex' : 'none';
+            }
+            const noSelHint = $('#pos-no-sel-hint');
+            if (noSelHint) {
+                noSelHint.style.display = hasTarget ? 'none' : 'block';
+            }
 
             // Update Active Item Title
             const titles = {
@@ -1922,54 +1970,83 @@
                 p: 'Photo Placement'
             };
             const titleEl = $('#active-item-title');
-            if (titleEl) titleEl.textContent = titles[target] || 'Item Placement';
+            if (titleEl) {
+                titleEl.textContent = hasTarget ? (titles[target] || 'Item Placement') : 'No Item Selected';
+                titleEl.style.opacity = hasTarget ? '1' : '0.6';
+            }
 
-            // Update Alignment Buttons (active state)
+            // Update Alignment Buttons (active state & disabled)
             const defaultAl = [0, 0, 1, 2][S.lay];
-            const curAl = (S.al && S.al[target] !== undefined && S.al[target] !== null) ? S.al[target] : defaultAl;
+            const curAl = (hasTarget && S.al && S.al[target] !== undefined && S.al[target] !== null) ? S.al[target] : defaultAl;
             document.querySelectorAll('#pos-align-group .align-btn').forEach(btn => {
-                btn.classList.toggle('active', +btn.dataset.align === curAl);
+                btn.classList.toggle('active', hasTarget && +btn.dataset.align === curAl);
+                btn.disabled = !hasTarget;
             });
 
-            // Update X & Y Sliders & Readouts
+            // Update Item-Specific Controls container
+            const itemControls = $('#pos-item-controls');
+            if (itemControls) {
+                itemControls.classList.toggle('pos-item-controls-disabled', !hasTarget);
+            }
+
+            // Sliders & Reset buttons
+            const pos = (hasTarget && S.pos && S.pos[target]) ? S.pos[target] : [0, 0];
+            const jit = (hasTarget && S.jit && S.jit[target] !== undefined) ? S.jit[target] : 0;
+
             const posXInput = $('#pos-x'), posYInput = $('#pos-y'), rotInput = $('#pos-rot');
-            if (posXInput) posXInput.value = pos[0];
-            if (posYInput) posYInput.value = pos[1];
-            if (rotInput) rotInput.value = jit;
+            if (posXInput) {
+                posXInput.disabled = !hasTarget;
+                posXInput.value = pos[0];
+            }
+            if (posYInput) {
+                posYInput.disabled = !hasTarget;
+                posYInput.value = pos[1];
+            }
+            if (rotInput) {
+                rotInput.disabled = !hasTarget;
+                rotInput.value = jit;
+            }
+
+            ['reset-x', 'reset-y', 'reset-rot', 'nudge-up', 'nudge-down', 'nudge-left', 'nudge-right', 'pos-reset-item'].forEach(id => {
+                const el = $('#' + id);
+                if (el) el.disabled = !hasTarget;
+            });
 
             const posXVal = $('#pos-x-val'), posYVal = $('#pos-y-val'), rotVal = $('#pos-rot-val');
-            if (posXVal) posXVal.textContent = (pos[0] > 0 ? '+' : '') + Math.round(pos[0]) + ' px';
-            if (posYVal) posYVal.textContent = (pos[1] > 0 ? '+' : '') + Math.round(pos[1]) + ' px';
-            if (rotVal) rotVal.textContent = (jit > 0 ? '+' : '') + jit.toFixed(1) + '°';
+            if (posXVal) posXVal.textContent = hasTarget ? ((pos[0] > 0 ? '+' : '') + Math.round(pos[0]) + ' px') : '—';
+            if (posYVal) posYVal.textContent = hasTarget ? ((pos[1] > 0 ? '+' : '') + Math.round(pos[1]) + ' px') : '—';
+            if (rotVal) rotVal.textContent = hasTarget ? ((jit > 0 ? '+' : '') + jit.toFixed(1) + '°') : '—';
 
-            // Update Scale Slider for selected item
+            // Scale slider
             const scaleRow = $('#item-scale-row'), scaleLabel = $('#scale-label'), scaleSlider = $('#scale-slider'), scaleVal = $('#scale-val');
             if (scaleSlider && scaleLabel && scaleVal && scaleRow) {
-                if (target === 't') {
+                scaleSlider.disabled = !hasTarget;
+                if (!hasTarget) {
+                    scaleLabel.textContent = 'Item text size';
+                    scaleSlider.value = 1;
+                    scaleVal.textContent = '—';
+                } else if (target === 't') {
                     scaleLabel.textContent = 'Title size scale';
                     scaleSlider.min = '0.5';
                     scaleSlider.max = '1.6';
                     scaleSlider.value = S.ts || 1;
                     scaleVal.textContent = Math.round((S.ts || 1) * 100) + '%';
-                    scaleRow.style.display = 'flex';
                 } else if (target === 'i' || target === 'm') {
                     scaleLabel.textContent = 'Body text size scale';
                     scaleSlider.min = '0.5';
                     scaleSlider.max = '1.5';
                     scaleSlider.value = S.bs || 1;
                     scaleVal.textContent = Math.round((S.bs || 1) * 100) + '%';
-                    scaleRow.style.display = 'flex';
                 } else if (target === 'p') {
                     scaleLabel.textContent = 'Photo size scale';
                     scaleSlider.min = '0.3';
                     scaleSlider.max = '2.0';
                     scaleSlider.value = S.ps || 1;
                     scaleVal.textContent = Math.round((S.ps || 1) * 100) + '%';
-                    scaleRow.style.display = 'flex';
                 }
             }
 
-            // Update Gap Slider & Readout
+            // Update Gap Slider & Readout (always enabled)
             const gapSlider = $('#gap-slider'), gapVal = $('#gap-val');
             if (gapSlider && gapVal) {
                 gapSlider.value = S.gap || 1;
@@ -2046,7 +2123,9 @@
                 if (el) el.value = S[k] !== undefined ? S[k] : 1;
             });
             $('#safe').checked = !!S.safe;
-            FD.forEach(([k]) => $('#f_' + k).value = S.f[k] || '');
+            const isRiso = S.style === 'riso';
+            const blendGroup = $('#photo-blend-group');
+            if (blendGroup) blendGroup.style.display = isRiso ? 'block' : 'none';
             const curBlend = S.photoBlend === 'opaque' ? 'opaque' : 'ink';
             $$('#photo-blend-tabs .target-tab').forEach(b => {
                 b.classList.toggle('active', b.dataset.blend === curBlend);
@@ -2109,7 +2188,10 @@
 
         document.querySelectorAll('i[data-d]').forEach(i => {
             const act = i.dataset.d === 'tex_btn' ? 'tex' : i.dataset.d;
-            i.outerHTML = `<button class="dice" data-d="${act}" aria-label="Shuffle ${act}" title="Shuffle"><svg><use href="#die"/></svg></button>`;
+            const title = act === 'bg' ? 'Shuffle background decorations' :
+                act === 'jit' ? 'Scatter & tilt copy and photo' :
+                    `Shuffle ${act}`;
+            i.outerHTML = `<button class="dice" data-d="${act}" aria-label="${title}" title="${title}"><svg><use href="#die"/></svg></button>`;
         });
 
         // Event Listeners for inputs
@@ -2155,15 +2237,28 @@
         // Position & Nudge Sliders & Buttons
         document.querySelectorAll('#pos-target-tabs .target-tab').forEach(btn => {
             btn.onclick = () => {
-                activeTarget = btn.dataset.target;
+                if (activeTarget === btn.dataset.target) {
+                    activeTarget = null;
+                } else {
+                    activeTarget = btn.dataset.target;
+                }
                 updatePosControls();
                 render();
             };
         });
 
+        const deselectBtn = $('#btn-deselect');
+        if (deselectBtn) {
+            deselectBtn.onclick = () => {
+                activeTarget = null;
+                updatePosControls();
+                render();
+            };
+        }
+
         if ($('#pos-target')) {
             $('#pos-target').onchange = () => {
-                activeTarget = $('#pos-target').value;
+                activeTarget = $('#pos-target').value || null;
                 updatePosControls();
                 render();
             };
@@ -2171,6 +2266,7 @@
 
         document.querySelectorAll('#pos-align-group .align-btn').forEach(btn => {
             btn.onclick = () => {
+                if (!activeTarget) return;
                 if (!S.al) S.al = AL();
                 S.al[activeTarget] = +btn.dataset.align;
                 updatePosControls();
@@ -2180,6 +2276,7 @@
         });
 
         $('#pos-x').oninput = () => {
+            if (!activeTarget) return;
             S.pos[activeTarget][0] = +$('#pos-x').value;
             $('#pos-x-val').textContent = (S.pos[activeTarget][0] > 0 ? '+' : '') + Math.round(S.pos[activeTarget][0]) + ' px';
             render();
@@ -2188,6 +2285,7 @@
         $('#pos-x').onchange = push;
 
         $('#pos-y').oninput = () => {
+            if (!activeTarget) return;
             S.pos[activeTarget][1] = +$('#pos-y').value;
             $('#pos-y-val').textContent = (S.pos[activeTarget][1] > 0 ? '+' : '') + Math.round(S.pos[activeTarget][1]) + ' px';
             render();
@@ -2196,6 +2294,7 @@
         $('#pos-y').onchange = push;
 
         $('#reset-x').onclick = () => {
+            if (!activeTarget) return;
             S.pos[activeTarget][0] = 0;
             updatePosControls();
             render();
@@ -2203,6 +2302,7 @@
         };
 
         $('#reset-y').onclick = () => {
+            if (!activeTarget) return;
             S.pos[activeTarget][1] = 0;
             updatePosControls();
             render();
@@ -2210,6 +2310,7 @@
         };
 
         $('#reset-rot').onclick = () => {
+            if (!activeTarget) return;
             S.jit[activeTarget] = 0;
             updatePosControls();
             render();
@@ -2217,6 +2318,7 @@
         };
 
         $('#scale-slider').oninput = () => {
+            if (!activeTarget) return;
             const val = +$('#scale-slider').value;
             if (activeTarget === 't') {
                 S.ts = val;
@@ -2235,6 +2337,7 @@
         $('#scale-slider').onchange = push;
 
         $('#pos-rot').oninput = () => {
+            if (!activeTarget) return;
             S.jit[activeTarget] = +$('#pos-rot').value;
             $('#pos-rot-val').textContent = (S.jit[activeTarget] > 0 ? '+' : '') + S.jit[activeTarget].toFixed(1) + '°';
             render();
@@ -2271,6 +2374,7 @@
         });
 
         const nudge = (dx, dy) => {
+            if (!activeTarget) return;
             S.pos[activeTarget][0] += dx * currentNudgeStep;
             S.pos[activeTarget][1] += dy * currentNudgeStep;
             updatePosControls();
@@ -2284,6 +2388,7 @@
         $('#nudge-right').onclick = () => nudge(1, 0);
 
         $('#pos-reset-item').onclick = () => {
+            if (!activeTarget) return;
             S.pos[activeTarget] = [0, 0];
             S.jit[activeTarget] = 0;
             if (S.al) S.al[activeTarget] = null;
@@ -2332,7 +2437,7 @@
                 S.tex = pickOther(S.tex, texIds);
             },
             jit() {
-                S.seed = 1 + ri(998);
+                // Scatter & tilt copy and photo elements only (non-background)
                 ['t', 'i', 'm', 'p'].forEach(k => {
                     const cur = S.jit[k];
                     let next;
@@ -2341,6 +2446,14 @@
                     } while (Math.abs(next - cur) < 1.5);
                     S.jit[k] = next;
                 });
+            },
+            bg() {
+                // Randomize background decorations and texture noise
+                let next;
+                do {
+                    next = 1 + ri(998);
+                } while (next === S.seed);
+                S.seed = next;
             },
             copy() {
                 const curTitle = S.f.title;
@@ -2358,10 +2471,25 @@
             push();
         });
 
+        document.querySelectorAll('.shuffle-item').forEach(item => {
+            item.onclick = (e) => {
+                const b = item.querySelector('.dice');
+                if (b && e.target !== b && !b.contains(e.target)) {
+                    b.click();
+                }
+            };
+        });
+
         $('#un').onclick = () => go(-1);
         $('#re').onclick = () => go(1);
 
         document.onkeydown = e => {
+            if (e.key === 'Escape' && activeTarget) {
+                activeTarget = null;
+                updatePosControls();
+                render();
+                return;
+            }
             if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName) || !(e.ctrlKey || e.metaKey) || e.key.toLowerCase() != 'z') return;
             e.preventDefault();
             go(e.shiftKey ? 1 : -1);
@@ -2454,6 +2582,12 @@
                 cv.setPointerCapture(e.pointerId);
                 updatePosControls();
                 render();
+            } else {
+                if (activeTarget !== null) {
+                    activeTarget = null;
+                    updatePosControls();
+                    render();
+                }
             }
         };
 
@@ -2478,6 +2612,19 @@
                 push();
             }
         };
+
+        // Clicking blank stage background deselects element
+        const stageEl = $('.stage');
+        if (stageEl) {
+            stageEl.addEventListener('pointerdown', e => {
+                if (e.target === cv || e.target.closest('.cv-toolbar') || e.target.closest('#warn') || e.target.closest('button') || e.target.closest('input') || e.target.closest('label')) return;
+                if (activeTarget !== null) {
+                    activeTarget = null;
+                    updatePosControls();
+                    render();
+                }
+            });
+        }
 
         addEventListener('resize', render);
         try { const p = localStorage.flp; if (p) setPhoto(p); } catch (e) { }
