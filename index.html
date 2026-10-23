@@ -15,6 +15,10 @@
             --card: #fffaf0;
             --acc: #ff4f2e;
             --acc2: #ffd23f;
+            --ok-bg: #d7f5dd;
+            --ok-fg: #0d4a22;
+            --warn-bg: #ffd23f;
+            --warn-fg: #1a1a1a;
             --border-width: 2px;
             --radius: 10px;
             --shadow: 3px 3px 0 var(--fg);
@@ -35,6 +39,10 @@
                 --card: #26231b;
                 --acc: #ff6a4d;
                 --acc2: #d9ae22;
+                --ok-bg: #173d24;
+                --ok-fg: #bdf0ce;
+                --warn-bg: #d9ae22;
+                --warn-fg: #1a1a1a;
                 color-scheme: dark;
             }
         }
@@ -45,6 +53,10 @@
             --card: #26231b;
             --acc: #ff6a4d;
             --acc2: #d9ae22;
+            --ok-bg: #173d24;
+            --ok-fg: #bdf0ce;
+            --warn-bg: #d9ae22;
+            --warn-fg: #1a1a1a;
             color-scheme: dark;
         }
 
@@ -54,6 +66,10 @@
             --card: #fffaf0;
             --acc: #ff4f2e;
             --acc2: #ffd23f;
+            --ok-bg: #d7f5dd;
+            --ok-fg: #0d4a22;
+            --warn-bg: #ffd23f;
+            --warn-fg: #1a1a1a;
             color-scheme: light;
         }
 
@@ -740,13 +756,30 @@
         }
 
         #warn li {
-            background: var(--acc2);
-            color: #1a1a1a;
+            background: var(--warn-bg, var(--acc2));
+            color: var(--warn-fg, #1a1a1a);
             border: var(--border-width) solid var(--fg);
             border-radius: 6px;
-            padding: 4px 8px;
+            padding: 5px 10px;
             margin: 4px 0;
             box-shadow: 2px 2px 0 var(--fg);
+            font-weight: 500;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        #warn li.warn-msg {
+            background: var(--warn-bg, var(--acc2));
+            color: var(--warn-fg, #1a1a1a);
+        }
+
+        #warn li.ok-msg {
+            background: var(--ok-bg, #d7f5dd);
+            color: var(--ok-fg, #0d4a22);
         }
 
         .note {
@@ -900,7 +933,7 @@
                 <!-- Dedicated Position & Spacing Controls -->
                 <details id="sec-pos" open>
                     <summary>Position &amp; Spacing</summary>
-                    
+
                     <!-- Element Selector Tabs -->
                     <div class="target-tabs" id="pos-target-tabs" role="tablist">
                         <button type="button" class="target-tab active" data-target="t">Title</button>
@@ -921,9 +954,12 @@
                     <div class="pos-item-header">
                         <span id="active-item-title" class="pos-active-title">Title Placement</span>
                         <div class="align-btn-group" id="pos-align-group">
-                            <button type="button" class="btn align-btn active" data-align="0" id="al-left" title="Align Left">Left</button>
-                            <button type="button" class="btn align-btn" data-align="1" id="al-center" title="Align Center">Center</button>
-                            <button type="button" class="btn align-btn" data-align="2" id="al-right" title="Align Right">Right</button>
+                            <button type="button" class="btn align-btn active" data-align="0" id="al-left"
+                                title="Align Left">Left</button>
+                            <button type="button" class="btn align-btn" data-align="1" id="al-center"
+                                title="Align Center">Center</button>
+                            <button type="button" class="btn align-btn" data-align="2" id="al-right"
+                                title="Align Right">Right</button>
                         </div>
                     </div>
 
@@ -933,7 +969,8 @@
                             <span>Vertical position (Y axis)</span>
                             <div class="pos-val-group">
                                 <span id="pos-y-val" class="pos-val">0 px</span>
-                                <button type="button" class="btn-micro" id="reset-y" title="Reset Y position to 0">0</button>
+                                <button type="button" class="btn-micro" id="reset-y"
+                                    title="Reset Y position to 0">0</button>
                             </div>
                         </div>
                         <input type="range" id="pos-y" min="-500" max="500" step="1" value="0">
@@ -945,7 +982,8 @@
                             <span>Horizontal position (X axis)</span>
                             <div class="pos-val-group">
                                 <span id="pos-x-val" class="pos-val">0 px</span>
-                                <button type="button" class="btn-micro" id="reset-x" title="Reset X position to 0">0</button>
+                                <button type="button" class="btn-micro" id="reset-x"
+                                    title="Reset X position to 0">0</button>
                             </div>
                         </div>
                         <input type="range" id="pos-x" min="-400" max="400" step="1" value="0">
@@ -966,7 +1004,8 @@
                             <span>Tilt / Angle</span>
                             <div class="pos-val-group">
                                 <span id="pos-rot-val" class="pos-val">0°</span>
-                                <button type="button" class="btn-micro" id="reset-rot" title="Level angle to 0°">0°</button>
+                                <button type="button" class="btn-micro" id="reset-rot"
+                                    title="Level angle to 0°">0°</button>
                             </div>
                         </div>
                         <input type="range" id="pos-rot" min="-20" max="20" step="0.5" value="0">
@@ -978,7 +1017,8 @@
                             <button type="button" class="btn btn-sm" id="nudge-up" title="Nudge Up">↑ Up</button>
                             <button type="button" class="btn btn-sm" id="nudge-down" title="Nudge Down">↓ Down</button>
                             <button type="button" class="btn btn-sm" id="nudge-left" title="Nudge Left">← Left</button>
-                            <button type="button" class="btn btn-sm" id="nudge-right" title="Nudge Right">→ Right</button>
+                            <button type="button" class="btn btn-sm" id="nudge-right" title="Nudge Right">→
+                                Right</button>
                         </div>
                         <div class="nudge-step-group">
                             <button type="button" class="nudge-step active" data-step="4">4px</button>
@@ -990,7 +1030,10 @@
                     <div class="layout-distribution-card">
                         <div class="dist-header">
                             <span>Overall Vertical Spacing</span>
-                            <button type="button" class="btn btn-sm btn-primary" id="btn-auto-fit" title="Automatically space and fit all text on canvas" style="background:var(--acc);color:#fff;border-color:var(--fg);">✨ Auto-Fit &amp; Space</button>
+                            <button type="button" class="btn btn-sm btn-primary" id="btn-auto-fit"
+                                title="Automatically space and fit all text on canvas"
+                                style="background:var(--acc);color:#fff;border-color:var(--fg);">✨ Auto-Fit &amp;
+                                Space</button>
                         </div>
                         <div class="pos-control-row" style="margin-top: 6px;">
                             <div class="pos-control-label">
@@ -1015,6 +1058,16 @@
                         <button id="rm">Remove</button>
                     </div>
                     <label>Photo size<input type="range" id="ps" min=".3" max="1.8" step=".05"></label>
+                    <div style="margin: 10px 0 4px;">
+                        <span style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">Photo
+                            Appearance:</span>
+                        <div class="target-tabs" id="photo-blend-tabs" role="tablist">
+                            <button type="button" class="target-tab active" data-blend="ink" id="blend-ink-btn">Riso Ink
+                                Blend</button>
+                            <button type="button" class="target-tab" data-blend="opaque" id="blend-opaque-btn">Opaque
+                                Cutout</button>
+                        </div>
+                    </div>
                 </details>
 
                 <!-- Export & Recipe Actions placed at bottom of controls -->
@@ -1063,7 +1116,7 @@
     </div>
 
     <script>
-        const $ = s => document.querySelector(s), ri = n => Math.random() * n | 0, PI = Math.PI;
+        const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s), ri = n => Math.random() * n | 0, PI = Math.PI;
 
         // Font pairings
         const PR = [
@@ -1076,22 +1129,22 @@
 
         // 16 curated high-contrast classic graphic design palettes
         const PL = [
-            ['#f3ecd9', '#1c2c6e', '#ff5a3c'], // 0 Classic Riso (Paper cream, Cobalt navy, Neon orange)
+            ['#f3ecd9', '#1c2c6e', '#e84e2a'], // 0 Classic Riso (Paper cream, Cobalt navy, Vermilion orange)
             ['#f5f5f0', '#101010', '#ff3b1d'], // 1 Swiss Modern (Off-white, Jet black, International red)
             ['#fbfbf8', '#1a1a1a', '#8a8a85'], // 2 Minimalist Gallery (Warm white, Charcoal, Stone gray)
-            ['#c9d8ff', '#1b1464', '#ff2d95'], // 3 Neon Cyber (Ice blue, Deep indigo, Hot pink)
-            ['#efe9dc', '#1f2a1f', '#d98c00'], // 4 Botanical Print (Kraft cream, Forest green, Amber gold)
+            ['#c9d8ff', '#1b1464', '#d81577'], // 3 Neon Cyber (Ice blue, Deep indigo, Vivid magenta)
+            ['#efe9dc', '#1f2a1f', '#a86500'], // 4 Botanical Print (Kraft cream, Forest green, Amber ochre)
             ['#161616', '#f3eedf', '#ff5d8f'], // 5 Tokyo Night (Pitch black, Warm cream, Neon magenta)
             ['#fff3c4', '#40210f', '#0e7c6b'], // 6 Vintage Poster (Pale maize, Espresso brown, Jade teal)
-            ['#e8e0f5', '#2a1458', '#ff7a45'], // 7 Lavender Haze (Soft violet, Midnight purple, Electric tangerine)
-            ['#fcf6ea', '#8b263e', '#e07a5f'], // 8 Terracotta Wine (Parchment, Crimson wine, Burnt terracotta)
-            ['#e6f4f1', '#0f3a40', '#f4a261'], // 9 Oceanic Sand (Seafoam mist, Deep teal, Coral peach)
+            ['#e8e0f5', '#2a1458', '#d64817'], // 7 Lavender Haze (Soft violet, Midnight purple, Warm tangerine)
+            ['#fcf6ea', '#8b263e', '#c7593c'], // 8 Terracotta Wine (Parchment, Crimson wine, Rust terracotta)
+            ['#e6f4f1', '#0f3a40', '#bd6419'], // 9 Oceanic Sand (Seafoam mist, Deep teal, Warm cinnamon)
             ['#1e1f29', '#e2e8f0', '#38bdf8'], // 10 Midnight Synth (Slate black, Cool silver, Sky cyan)
             ['#fdf0d5', '#003049', '#c1121f'], // 11 Bauhaus Primary (Warm eggshell, Prussian blue, Cardinal red)
             ['#ede0d4', '#3d2b1f', '#7f5539'], // 12 Espresso Chic (Oat milk, Dark roast, Warm bronze)
             ['#d8f3dc', '#081c15', '#40916c'], // 13 Forest Canopy (Mint green, Midnight pine, Emerald)
             ['#ffeaee', '#3d0c24', '#ff0054'], // 14 Acid Berry (Blush rose, Deep plum, Electric cerise)
-            ['#f4f1de', '#3d405b', '#e07a5f']  // 15 Sunbaked Desert (Adobe cream, Slate indigo, Desert clay)
+            ['#f4f1de', '#3d405b', '#c45334']  // 15 Sunbaked Desert (Adobe cream, Slate indigo, Terracotta clay)
         ];
 
         // Available textures
@@ -1233,6 +1286,7 @@
             pos: Z(),
             al: AL(),
             ps: 1,
+            photoBlend: 'ink',
             safe: 0,
             f: { ...EX[0] }
         };
@@ -1458,7 +1512,12 @@
                 c.save();
                 c.translate(x + w / 2, y + h / 2);
                 c.rotate(S.jit.p * PI / 180);
-                if (st == 'riso' || st == 'print') c.globalCompositeOperation = 'multiply';
+                const isOpaque = S.photoBlend === 'opaque';
+                if (!isOpaque && (st == 'riso' || st == 'print')) {
+                    c.globalCompositeOperation = 'multiply';
+                } else {
+                    c.globalCompositeOperation = 'source-over';
+                }
                 c.drawImage(PH.img, -w / 2, -h / 2, w, h);
                 c.globalCompositeOperation = 'source-over';
                 if (st == 'zine' || st == 'clip') {
@@ -1773,7 +1832,7 @@
                     c.setLineDash([5, 4]);
                     c.strokeRect(activeBox.x - pad, activeBox.y - pad, activeBox.w + pad * 2, activeBox.h + pad * 2);
                     c.setLineDash([]);
-                    
+
                     // 4 corner grips
                     c.fillStyle = '#ff4f2e';
                     const sz = 6;
@@ -1812,7 +1871,7 @@
             if (/good vibes|great people|good times|fun hangs|you.?re invited to a/i.test(all)) w.push('Copy lint: say what happens instead of announcing the vibe.');
             if (/!!/.test(all)) w.push('Copy lint: stacked exclamation marks.');
             if ((S.f.details || S.f.perks) && !S.f.rsvp) w.push('No next step yet. How should people reply?');
-            $('#warn').innerHTML = w.length ? w.map(x => '<li>' + x + '</li>').join('') : '<li>Looks readable. ✓</li>';
+            $('#warn').innerHTML = w.length ? w.map(x => '<li class="warn-msg">' + x + '</li>').join('') : '<li class="ok-msg">Likely readable. ✓</li>';
             const fixBtn = $('#btn-fix-fit');
             if (fixBtn) {
                 fixBtn.onclick = () => {
@@ -1988,6 +2047,10 @@
             });
             $('#safe').checked = !!S.safe;
             FD.forEach(([k]) => $('#f_' + k).value = S.f[k] || '');
+            const curBlend = S.photoBlend === 'opaque' ? 'opaque' : 'ink';
+            $$('#photo-blend-tabs .target-tab').forEach(b => {
+                b.classList.toggle('active', b.dataset.blend === curBlend);
+            });
             updatePosControls();
             render();
         }
@@ -2323,6 +2386,18 @@
             try { localStorage.flp = ''; } catch (e) { }
         };
 
+        $$('#photo-blend-tabs .target-tab').forEach(btn => {
+            btn.onclick = () => {
+                S.photoBlend = btn.dataset.blend;
+                $$('#photo-blend-tabs .target-tab').forEach(b => {
+                    b.classList.toggle('active', b === btn);
+                });
+                render();
+                sv();
+                push();
+            };
+        });
+
         $('#sr').onclick = () => save('flyer-recipe.json', JSON.stringify({ S, photo: PH.src || '' }));
 
         const ld = look => e => {
@@ -2336,7 +2411,7 @@
                 sync();
                 push();
             }).catch(() => {
-                $('#warn').innerHTML = '<li>That file is not a flyer recipe.</li>';
+                $('#warn').innerHTML = '<li class="warn-msg">That file is not a flyer recipe.</li>';
             });
             e.target.value = '';
         };
