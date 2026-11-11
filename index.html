@@ -348,6 +348,133 @@
             box-shadow: 1px 1px 0 var(--fg) !important;
         }
 
+        /* Format Selector & Field Hints */
+        .format-section {
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--fg);
+        }
+
+        .format-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .format-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--fg);
+            margin: 0;
+        }
+
+        .format-badge {
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--fg);
+            color: var(--bg);
+            padding: 2px 7px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .format-tabs {
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            gap: 4px;
+            margin: 4px 0 6px;
+        }
+
+        .format-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .format-tabs .target-tab {
+            white-space: nowrap;
+            padding: 6px 8px;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .format-desc {
+            font-size: 11px;
+            color: var(--fg);
+            opacity: 0.75;
+            line-height: 1.35;
+            font-style: italic;
+        }
+
+        .field-label-text {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .field-hint {
+            display: block;
+            font-size: 11px;
+            color: var(--fg);
+            opacity: 0.65;
+            margin-top: 3px;
+            font-family: "Space Mono", monospace;
+        }
+
+        .hidden-chips-box {
+            margin: 6px 0 10px;
+            padding: 8px 10px;
+            background: var(--bg);
+            border: 1px solid var(--fg);
+            border-radius: 8px;
+        }
+
+        .chips-prompt {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--fg);
+        }
+
+        .chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .chip-btn {
+            font: 700 11px/1 "Space Grotesk", system-ui, sans-serif;
+            background: var(--card);
+            border: 1px solid var(--fg);
+            border-radius: 999px;
+            padding: 5px 9px;
+            color: var(--fg);
+            cursor: pointer;
+            box-shadow: 1px 1px 0 var(--fg);
+            transition: all 0.12s ease;
+            user-select: none;
+            min-height: 26px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .chip-btn:hover {
+            background: var(--acc);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 2px 2px 0 var(--fg);
+        }
+
+        .chip-btn:active {
+            transform: translateY(1px);
+            box-shadow: none;
+        }
+
         .pos-item-header {
             display: flex;
             justify-content: space-between;
@@ -916,6 +1043,20 @@
             <div class="controls-col" id="controls">
                 <details id="sec-words" open>
                     <summary>Information</summary>
+                    <div class="format-section">
+                        <div class="format-header">
+                            <label class="format-label">Document Format</label>
+                            <span class="format-badge" id="format-badge">Flyer</span>
+                        </div>
+                        <div class="target-tabs format-tabs" id="format-tabs" role="tablist" aria-label="Document format selector">
+                            <button type="button" class="target-tab active" data-fmt="freeform" role="tab" aria-selected="true" title="Freeform Flyer">Freeform</button>
+                            <button type="button" class="target-tab" data-fmt="note" role="tab" aria-selected="false" title="Note Passed in Class">Class Note</button>
+                            <button type="button" class="target-tab" data-fmt="museum" role="tab" aria-selected="false" title="Museum Wall Label">Wall Label</button>
+                            <button type="button" class="target-tab" data-fmt="callsheet" role="tab" aria-selected="false" title="Production Call Sheet">Call Sheet</button>
+                            <button type="button" class="target-tab" data-fmt="classifieds" role="tab" aria-selected="false" title="Vintage Classifieds">Classifieds</button>
+                        </div>
+                        <div class="format-desc" id="format-desc">Classic flowing flyer with Title, Info, and Details blocks.</div>
+                    </div>
                     <div id="fields"></div>
                     <div class="bar" style="margin-top: 10px; justify-content: space-between;">
                         <button id="clr">Clear examples</button>
@@ -1227,77 +1368,419 @@
             { t: [.92, .07, 2], i: [.92, .40, 2], m: [.92, .62, 2] }  // Layout 3: Right aligned
         ];
 
-        const EX = [
-            {
-                title: 'Dinner at Maya’s',
-                host: 'Maya',
-                date: 'Saturday, November 14',
-                time: '7:00 pm',
-                venue: 'Maya’s place',
-                addr: '418 Alder St, Apt 2',
-                sell: 'Chili on the stove. Dessert around nine.',
-                details: 'Please bring a dessert to share\nShoes off at the door',
-                perks: 'Chili and cornbread provided',
-                hidden: 'Street parking is easy after six. No plus-ones this time.',
-                rsvp: 'Text Maya by Nov 10'
+        const FORMATS = {
+            freeform: {
+                id: 'freeform',
+                name: 'Freeform',
+                badge: 'Flyer',
+                desc: 'Classic flowing flyer with Title, Info, and Details blocks.',
+                layouts: 4,
+                labels: {
+                    title: 'Title',
+                    host: 'Host',
+                    date: 'Day and date',
+                    time: 'Time',
+                    venue: 'Venue',
+                    addr: 'Address',
+                    sell: 'One selling line (show, don’t tell)',
+                    details: 'Things to do or bring, one per line',
+                    perks: 'Perks (concrete only)',
+                    hidden: 'Hidden questions: parking? plus-ones? kids? when it ends?',
+                    rsvp: 'Next step: RSVP, how to enter'
+                },
+                hints: {
+                    title: 'Event name or bold headline',
+                    host: 'Who is hosting or organizing',
+                    date: 'e.g. Saturday, November 14',
+                    time: 'e.g. 7:00 pm',
+                    venue: 'e.g. Maya’s place',
+                    addr: 'e.g. 418 Alder St, Apt 2',
+                    sell: 'One concrete line (e.g. Chili on the stove. Dessert around nine.)',
+                    details: 'One item per line (e.g. — Please bring a dessert)',
+                    perks: 'Concrete perks only (e.g. Free tacos for volunteers)',
+                    hidden: 'Parking, kids, plus-ones, wrap time',
+                    rsvp: 'Next step: text, email, link'
+                }
             },
-            {
-                title: 'Trivia, Unfair Edition',
-                host: 'Dev and Priya',
-                date: 'Friday, November 20',
-                time: 'Doors 8, first question 8:30',
-                venue: 'The Corner Booth',
-                addr: '92 Main St',
-                sell: 'Teams of four. Rounds get progressively rude.',
-                details: 'Bring a pen\nTeam names are judged',
-                perks: 'Winners get the good pen',
-                hidden: '21+. Kitchen closes at 10.',
-                rsvp: 'Reply with your team name'
+            note: {
+                id: 'note',
+                name: 'Note Passed in Class',
+                badge: 'Loose-Leaf',
+                desc: 'Folded paper note with faint ruled lines, secret tone, & RSVP checkboxes.',
+                layouts: 2,
+                labels: {
+                    title: 'Secret Subject / Header',
+                    host: 'From (Sender / Desk)',
+                    date: 'Day & Period',
+                    time: 'Time / Recess',
+                    venue: 'Meetup Spot',
+                    addr: 'Secret Directions',
+                    sell: 'The Scoop / Pitch',
+                    details: 'Whispered Message & Bring List',
+                    perks: 'Secret Perks',
+                    hidden: 'Keep It Quiet (Parking, Rules)',
+                    rsvp: 'RSVP Question (Checkboxes)'
+                },
+                hints: {
+                    title: 'e.g. "Psst... Friday?" or "DO NOT OPEN UNTIL 3:30"',
+                    host: 'e.g. From: Maya (row 3)',
+                    date: 'e.g. Friday after 7th period',
+                    time: 'e.g. Around 7:00 pm',
+                    venue: 'e.g. Maya’s place (Apt 2)',
+                    addr: 'e.g. Buzz #2, don’t knock loud',
+                    sell: 'e.g. Chili is simmering on the stove. Don’t tell Henderson.',
+                    details: 'e.g. Bring something sweet to share\nShoes off at door',
+                    perks: 'e.g. Hot cornbread straight from the oven',
+                    hidden: 'e.g. Street parking free after 6. No extra plus-ones.',
+                    rsvp: 'e.g. Circle Yes, No, or Maybe and pass back!'
+                }
             },
-            {
-                title: 'Park Cleanup and Tacos',
-                host: 'Elm Street Neighbors',
-                date: 'Sunday, November 8',
-                time: '10 am to noon',
-                venue: 'Fairmount Park',
-                addr: 'Meet by the east gate',
-                sell: 'Two hours of picking up, then a taco truck.',
-                details: 'Wear closed-toe shoes\nGloves and bags provided',
-                perks: 'Free tacos for all volunteers',
-                hidden: 'Kids welcome. Park on Elm.',
-                rsvp: 'Sign up at the east gate'
+            museum: {
+                id: 'museum',
+                name: 'Museum Wall Label',
+                badge: 'Gallery Tombstone',
+                desc: 'Formal gallery label with strict hierarchy, dynamic year, and medium.',
+                layouts: 2,
+                labels: {
+                    title: 'Title of Work (in italics)',
+                    host: 'Artist / Host',
+                    date: 'Date & Year of Creation',
+                    time: 'Viewing Hours',
+                    venue: 'Gallery / Institution',
+                    addr: 'Room / Wing / Address',
+                    sell: 'Medium & Materials',
+                    details: 'Curator Notes & What to bring',
+                    perks: 'Gift / Acquisition Line',
+                    hidden: 'Visitor Disclaimers & Rules',
+                    rsvp: 'Admission / Inquiries'
+                },
+                hints: {
+                    title: 'e.g. "Study for a Friday Evening with Chili"',
+                    host: 'e.g. Maya Lin-Torres (American, b. 1994)',
+                    date: 'e.g. Saturday, November 14, 2026',
+                    time: 'e.g. 7:00 pm – late',
+                    venue: 'e.g. Gallery 4 (Maya’s Loft)',
+                    addr: 'e.g. 418 Alder Street, Second Floor',
+                    sell: 'e.g. Cardboard, good snacks, and conversation',
+                    details: 'e.g. Guests are invited to bring a complementary confectionery piece',
+                    perks: 'e.g. Gift of the attendees and Elm Street Neighbors',
+                    hidden: 'e.g. Street parking permitted after 18:00. No plus-ones.',
+                    rsvp: 'e.g. Private viewing · RSVP via text by November 10'
+                }
             },
-            {
-                title: 'Vintage Flea & Vinyl',
-                host: 'Dusty Grooves Collective',
-                date: 'Saturday, October 24',
-                time: '11:00 am – 5:00 pm',
-                venue: 'Warehouse 9',
-                addr: '702 Industrial Way',
-                sell: 'Crates of rare funk, 90s streetwear, and cold cider.',
-                details: 'Cash and cards accepted\nBring your own tote bags',
-                perks: 'Live DJs spinning vinyl all afternoon',
-                hidden: 'ATM on site. Bike rack near entry.',
-                rsvp: 'Free admission · RSVP for early bird entry'
+            callsheet: {
+                id: 'callsheet',
+                name: 'Production Call Sheet',
+                badge: 'Film Grid',
+                desc: 'Authentic film/theater call sheet grid with call time, crew roster & wardrobe.',
+                layouts: 2,
+                labels: {
+                    title: 'Production Title',
+                    host: 'Director / Host / EP',
+                    roles: 'Crew Roster & Roles',
+                    date: 'Shooting Date',
+                    time: 'General Call Time (Prominent)',
+                    venue: 'Location / Stage',
+                    addr: 'Basecamp / Address',
+                    sell: 'Scene / Production Summary',
+                    details: 'Wardrobe & Bring List',
+                    perks: 'Catering & Craft Services',
+                    hidden: 'Special Notes & Weather',
+                    rsvp: 'Confirm Call / Emergency Contact'
+                },
+                hints: {
+                    title: 'e.g. "CHILI & CONVERSATION (PROD #418)"',
+                    host: 'e.g. Maya (Director / Executive Producer)',
+                    roles: 'e.g. "Snack Coordinator", "Morale Officer", "Soundtrack"',
+                    date: 'e.g. Saturday, Nov 14, 2026',
+                    time: 'e.g. 19:00 SHARP (Crew call 18:30)',
+                    venue: 'e.g. Maya’s Loft · Stage B',
+                    addr: 'e.g. 418 Alder St, Apt 2',
+                    sell: 'e.g. SCENE 1: Warm bowl craft services. SCENE 2: Dessert dialogue.',
+                    details: 'e.g. Casual wardrobe, warm socks (shoes off at basecamp)',
+                    perks: 'e.g. 5-alarm vegetarian chili & hot skillet cornbread',
+                    hidden: 'e.g. Weather: Clear 58°F · Sunset 17:14 · Parking after 18:00',
+                    rsvp: 'e.g. Text Maya to confirm call time by Nov 10 at 18:00'
+                }
             },
-            {
-                title: 'Sunset Rooftop Cinema',
-                host: 'Film Club 88',
-                date: 'Thursday, August 12',
-                time: 'Dusk (around 8:15 pm)',
-                venue: 'The Skylight Terrace',
-                addr: '350 Grand Ave',
-                sell: '35mm projection under open stars with hot buttered corn.',
-                details: 'Blankets encouraged\nZero cell phone tolerance',
-                perks: 'Free heirloom popcorn included',
-                hidden: 'Elevator access available. Rain date Sunday.',
-                rsvp: 'Reserve a deck chair online'
+            classifieds: {
+                id: 'classifieds',
+                name: 'Classifieds',
+                badge: 'Vintage News',
+                desc: 'Compact newspaper classifieds section with bold category headers and multi-column breathability.',
+                layouts: 2,
+                labels: {
+                    title: 'Notice Headline / Item for Sale',
+                    host: 'Advertiser / Contact',
+                    date: 'Date of Notice',
+                    time: 'Time of Event',
+                    venue: 'Meeting Location',
+                    addr: 'Address / Street',
+                    sell: 'Lead Description',
+                    details: 'Itemized Details / Terms',
+                    perks: 'Inclusions & Amenities',
+                    hidden: 'Fine Print & Disclaimers',
+                    rsvp: 'Inquiries & Next Step'
+                },
+                hints: {
+                    title: 'e.g. FOR SALE: ONE SATURDAY NIGHT (VERY GOOD CONDITION)',
+                    host: 'e.g. Maya (Private Party)',
+                    date: 'e.g. Saturday, November 14',
+                    time: 'e.g. 7:00 pm until late',
+                    venue: 'e.g. Private Residence, 2nd Fl',
+                    addr: 'e.g. 418 Alder St (Near 4th)',
+                    sell: 'e.g. Rare evening of homemade chili, vinyl records, and talk.',
+                    details: 'e.g. Must bring one dessert to trade · No outdoor shoes',
+                    perks: 'e.g. Includes fresh cornbread and bottomless tea',
+                    hidden: 'e.g. Easy street parking after 6 PM. No drop-in dealers.',
+                    rsvp: 'e.g. To inspect merchandise, text Maya before Nov 10.'
+                }
             }
-        ];
+        };
+
+        const EX_FORMATS = {
+            freeform: [
+                {
+                    title: 'Dinner at Maya’s',
+                    host: 'Maya',
+                    date: 'Saturday, November 14',
+                    time: '7:00 pm',
+                    venue: 'Maya’s place',
+                    addr: '418 Alder St, Apt 2',
+                    sell: 'Chili on the stove. Dessert around nine.',
+                    details: 'Please bring a dessert to share\nShoes off at the door',
+                    perks: 'Chili and cornbread provided',
+                    hidden: 'Street parking is easy after six. No plus-ones this time.',
+                    rsvp: 'Text Maya by Nov 10'
+                },
+                {
+                    title: 'Trivia, Unfair Edition',
+                    host: 'Dev and Priya',
+                    date: 'Friday, November 20',
+                    time: 'Doors 8, first question 8:30',
+                    venue: 'The Corner Booth',
+                    addr: '92 Main St',
+                    sell: 'Teams of four. Rounds get progressively rude.',
+                    details: 'Bring a pen\nTeam names are judged',
+                    perks: 'Winners get the good pen',
+                    hidden: '21+. Kitchen closes at 10.',
+                    rsvp: 'Reply with your team name'
+                },
+                {
+                    title: 'Park Cleanup and Tacos',
+                    host: 'Elm Street Neighbors',
+                    date: 'Sunday, November 8',
+                    time: '10 am to noon',
+                    venue: 'Fairmount Park',
+                    addr: 'Meet by the east gate',
+                    sell: 'Two hours of picking up, then a taco truck.',
+                    details: 'Wear closed-toe shoes\nGloves and bags provided',
+                    perks: 'Free tacos for all volunteers',
+                    hidden: 'Kids welcome. Park on Elm.',
+                    rsvp: 'Sign up at the east gate'
+                },
+                {
+                    title: 'Vintage Flea & Vinyl',
+                    host: 'Dusty Grooves Collective',
+                    date: 'Saturday, October 24',
+                    time: '11:00 am – 5:00 pm',
+                    venue: 'Warehouse 9',
+                    addr: '702 Industrial Way',
+                    sell: 'Crates of rare funk, 90s streetwear, and cold cider.',
+                    details: 'Cash and cards accepted\nBring your own tote bags',
+                    perks: 'Live DJs spinning vinyl all afternoon',
+                    hidden: 'ATM on site. Bike rack near entry.',
+                    rsvp: 'Free admission · RSVP for early bird entry'
+                },
+                {
+                    title: 'Sunset Rooftop Cinema',
+                    host: 'Film Club 88',
+                    date: 'Thursday, August 12',
+                    time: 'Dusk (around 8:15 pm)',
+                    venue: 'The Skylight Terrace',
+                    addr: '350 Grand Ave',
+                    sell: '35mm projection under open stars with hot buttered corn.',
+                    details: 'Blankets encouraged\nZero cell phone tolerance',
+                    perks: 'Free heirloom popcorn included',
+                    hidden: 'Elevator access available. Rain date Sunday.',
+                    rsvp: 'Reserve a deck chair online'
+                }
+            ],
+            note: [
+                {
+                    title: 'Psst... Maya’s place Friday?',
+                    host: 'Maya (row 3)',
+                    date: 'Friday after 7th period',
+                    time: 'Around 7:00 pm',
+                    venue: '418 Alder St (Apt 2)',
+                    addr: 'Buzz #2, don’t knock loud',
+                    sell: 'Chili is simmering on the stove. Don’t tell Mr. Henderson.',
+                    details: 'Bring something sweet to share\nTake shoes off right at the door\nDev is bringing the good speakers',
+                    perks: 'Hot skillet cornbread straight from the oven',
+                    hidden: 'Street parking is free after 6. Keep it quiet, no extra plus-ones.',
+                    rsvp: 'Pass this back before 5th period!'
+                },
+                {
+                    title: 'DO NOT OPEN UNTIL 3:30 PM',
+                    host: 'Dev & Priya',
+                    date: 'Saturday night',
+                    time: '8:00 pm sharp',
+                    venue: 'The Corner Booth Lounge',
+                    addr: '92 Main St, rear booth',
+                    sell: 'Unfair trivia tournament. Rounds get progressively unreasonable.',
+                    details: 'Bring your own blue or black pen\nAbsurd team names strictly required\nPriya made double-fudge brownies',
+                    perks: 'Grand prize is an unsharpened gold pencil',
+                    hidden: 'Park down the street on Elm. Adults only. Wrap by 11.',
+                    rsvp: 'Circle your answer below and slip under door!'
+                },
+                {
+                    title: 'SECRET MEETING: Operation Tacos',
+                    host: 'Elm Street Park Crew',
+                    date: 'Sunday morning',
+                    time: '10:00 am to 12:30 pm',
+                    venue: 'Fairmount Park East Gate',
+                    addr: 'Under the big willow tree',
+                    sell: 'We pick up the park for 90 minutes, then the taco truck opens.',
+                    details: 'Wear boots you don’t care about\nHeavy canvas bags provided\nBring work gloves if you have them',
+                    perks: 'Complimentary carnitas & horchata for helpers',
+                    hidden: 'Kids welcome. Park on 4th Ave.',
+                    rsvp: 'Tear off corner or text RSVP by Friday'
+                }
+            ],
+            museum: [
+                {
+                    title: 'Study for a Friday Evening with Chili',
+                    host: 'Maya Lin-Torres (American, b. 1994)',
+                    date: 'Saturday, November 14, 2026',
+                    time: '7:00 pm – late',
+                    venue: 'Gallery 4 (Maya’s Loft)',
+                    addr: '418 Alder Street, Second Floor',
+                    sell: 'Slow-simmered beans, vintage ceramics, and domestic conversation.',
+                    details: 'Guests are invited to bring a complementary confectionery piece\nFootwear removed upon entry',
+                    perks: 'Cast-iron skillet cornbread and salted butter provided',
+                    hidden: 'Street parking permitted after 18:00. Intimate space; no plus-ones.',
+                    rsvp: 'Private viewing · RSVP via text by November 10'
+                },
+                {
+                    title: 'Composition in Four Rounds (Unfair Trivia)',
+                    host: 'Dev Patel & Priya Sharma (Active 2018–present)',
+                    date: 'Friday, November 20, 2026',
+                    time: 'Doors at 20:00 · Inquiry commences 20:30',
+                    venue: 'The Corner Booth Pavilion',
+                    addr: '92 Main Street, Room 102',
+                    sell: 'Ballpoint pen on newsprint, competitive hubris, and craft beer.',
+                    details: 'Teams of four requested\nRigorous arbitrament of team nomenclature\nSilence during audio rounds',
+                    perks: 'Winners awarded the Golden Marker (2024)',
+                    hidden: 'Ages 21 and above. Kitchen service concludes at 22:00.',
+                    rsvp: 'Entry by registered team roster only'
+                },
+                {
+                    title: 'Two Hours in the Commons with Trompo',
+                    host: 'Elm Street Neighborhood Collective',
+                    date: 'Sunday, November 8, 2026',
+                    time: '10:00 am – 12:30 pm',
+                    venue: 'Fairmount Park Pavilion',
+                    addr: 'East Meadow, Gate 4',
+                    sell: 'Heavy canvas bags, recovered plastics, and salsa verde.',
+                    details: 'Closed-toe protective attire mandatory\nIndustrial gloves supplied at checkpoint',
+                    perks: 'Handmade street tacos funded by public goodwill',
+                    hidden: 'All ages admitted. Curbside parking along Elm Avenue.',
+                    rsvp: 'Open registration at the East Gate kiosk'
+                }
+            ],
+            callsheet: [
+                {
+                    title: 'CHILI & CONVERSATION (PROD #418)',
+                    host: 'Maya (Executive Producer / Director)',
+                    roles: 'Maya (Director / EP)\nDev (Craft Service Lead)\nPriya (Hospitality Coordinator)\nSam (Soundtrack & Atmosphere)',
+                    date: 'Saturday, Nov 14, 2026',
+                    time: 'CALL: 19:00 SHARP (Crew 18:30)',
+                    venue: 'Maya’s Loft (Stage B)',
+                    addr: '418 Alder St, Apt 2',
+                    sell: 'SCENE 1: Warm bowl craft services. SCENE 2: Dessert table dialogue.',
+                    details: 'WARDROBE: Relaxed casual, warm socks (shoes off at basecamp)\nBRING: One shareable dessert item',
+                    perks: 'CATERING: 5-alarm vegetarian chili & hot skillet cornbread',
+                    hidden: 'WEATHER: Clear 58°F · Sunset 17:14 · Parking on Alder after 18:00 · Zero unannounced guests',
+                    rsvp: 'CONFIRM CALL: Text Maya by Nov 10 at 18:00'
+                },
+                {
+                    title: 'THE UNFAIR TRIVIA SHOOT',
+                    host: 'Dev Patel (Showrunner)',
+                    roles: 'Dev Patel (Head Quizmaster)\nPriya Sharma (Scorekeeper & Arbiter)\nLeo Vance (Timer / Bell Ringer)',
+                    date: 'Friday, Nov 20, 2026',
+                    time: 'CREW CALL: 20:00 · FIRST QUESTION: 20:30',
+                    venue: 'The Corner Booth (Back Lounge)',
+                    addr: '92 Main St, Suite 4',
+                    sell: 'Four grueling rounds of cinematic, geographic, and petty local trivia.',
+                    details: 'EQUIPMENT: Bring personal blue/black pens\nTEAM LIMIT: 4 players max per table',
+                    perks: 'AWARDS: Ceremonial championship pen and kitchen tab honor',
+                    hidden: 'BASECAMP NOTES: 21+ only · Sound rolling during questions · Kitchen wraps at 22:00',
+                    rsvp: 'CALL CONFIRMATION: Reply with registered team name'
+                },
+                {
+                    title: 'COMMUNITY BEAUTIFICATION UNIT',
+                    host: 'Elm Street Field Operations',
+                    roles: 'Carlos M. (Field Ops Lead)\nDana K. (Safety Officer)\nTacos El Rey (Catering Logistics)',
+                    date: 'Sunday, Nov 8, 2026',
+                    time: 'GENERAL CALL: 10:00 AM · WRAP: 12:00 PM',
+                    venue: 'Fairmount Park (Sector East)',
+                    addr: 'East Gate Assembly Point',
+                    sell: 'Two-hour sweep of park grounds followed by mobile catering unit.',
+                    details: 'PPE: Heavy duty gloves and contractor bags issued on site\nFOOTWEAR: Closed-toe work boots',
+                    perks: 'CATERING TRUCK: Warm tacos and cold horchata at wrap',
+                    hidden: 'WEATHER: Sun & breeze 64°F · Kids crew active · Unit parking along East Meadow',
+                    rsvp: 'CHECK-IN: Report to East Gate tent upon arrival'
+                }
+            ],
+            classifieds: [
+                {
+                    title: 'FOR SALE: SATURDAY NIGHT (VERY GOOD CONDITION)',
+                    host: 'Maya (Private Party)',
+                    date: 'Saturday, November 14',
+                    time: '7:00 pm until late',
+                    venue: 'Private Residence, 2nd Fl',
+                    addr: '418 Alder St (Near 4th)',
+                    sell: 'Rare evening of homemade chili, vinyl records, and lively kitchen table talk. Barely used.',
+                    details: 'Must bring one dessert to trade\nStrictly no outdoor shoes indoors\nFirm price, serious inquiries only',
+                    perks: 'Includes fresh cornbread and bottomless tea',
+                    hidden: 'Easy street parking after 6 PM. No drop-in dealers or unexpected guests.',
+                    rsvp: 'To inspect merchandise, text Maya before Nov 10.'
+                },
+                {
+                    title: 'WANTED: COMPETITIVE MINDS & PETTY PEDANTS',
+                    host: 'The Corner League',
+                    date: 'Friday, November 20',
+                    time: 'Doors open 8:00 pm',
+                    venue: 'The Corner Booth Lounge',
+                    addr: '92 Main St',
+                    sell: 'Four rounds of unapologetically unfair trivia. Seeking individuals who remember obscure 90s facts.',
+                    details: 'Teams of four only\nBring your own writing utensil\nCheating strictly penalised',
+                    perks: 'Winners receive engraved pen and local bragging rights',
+                    hidden: 'Must be 21+. Kitchen closes prompt at 10 PM. Cash bar.',
+                    rsvp: 'Register team name at counter or reply promptly.'
+                },
+                {
+                    title: 'EXCHANGE: 2 HOURS LABOR FOR FRESH TACOS',
+                    host: 'Fairmount Volunteers',
+                    date: 'Sunday, November 8',
+                    time: '10:00 am to 12:00 pm',
+                    venue: 'Fairmount Park Grounds',
+                    addr: 'Assemble at East Gate',
+                    sell: 'Help restore the community meadow. All equipment and supplies furnished. Excellent return on investment.',
+                    details: 'Sturdy shoes required\nHeavy contractor bags and gloves provided\nFamilies welcome',
+                    perks: 'All workers receive authentic street taco lunch at noon',
+                    hidden: 'Free parking on Elm Street. Rain date following Sunday.',
+                    rsvp: 'Show up at gate or text to reserve volunteer packet.'
+                }
+            ]
+        };
+
+        const EX = EX_FORMATS.freeform;
 
         const FD = [
             ['title', 'Title'],
             ['host', 'Host'],
+            ['roles', 'Crew Roster & Roles', 1],
             ['date', 'Day and date'],
             ['time', 'Time'],
             ['venue', 'Venue'],
@@ -1314,6 +1797,7 @@
         const AL = () => ({ t: null, i: null, m: null });
 
         let S = {
+            format: 'freeform',
             style: 'riso',
             asp: 'poster',
             pal: PL[0].slice(),
@@ -1343,6 +1827,7 @@
             const j = JSON.parse(localStorage.fl);
             if (j && j.f) {
                 S = Object.assign({}, S, j);
+                if (!S.format) S.format = 'freeform';
                 if (S.bs === undefined) S.bs = 1;
                 if (S.gap === undefined) S.gap = 1;
                 if (!S.al) S.al = AL();
@@ -1467,128 +1952,141 @@
 
             const [pa, a, b] = S.pal, r = rng(S.seed + 1), st = S.style, L = LAY[S.lay], f = S.f, [tf, bf] = PR[S.font], mw = W * .84, bx = [];
             const baseDim = Math.min(W, H * 0.88);
-            const bodyScale = (S.bs || 1);
-            const titleScale = (S.ts || 1);
-            const gapScale = (S.gap || 1);
+            let bodyScale = (S.bs || 1);
+            let titleScale = (S.ts || 1);
+            let gapScale = (S.gap || 1);
+            const fmt = S.format || 'freeform';
 
             // Base Paper
             c.fillStyle = pa;
             c.fillRect(0, 0, W, H);
 
-            // Style Ornaments
+            // Style Ornaments (Calibrated & format-aware so text and grids are NEVER obscured)
             if (st == 'riso') {
-                c.globalCompositeOperation = 'multiply';
-                c.fillStyle = b;
-                c.beginPath();
-                c.arc(W * (.5 + r() * .4), H * (.2 + r() * .3), W * .3, 0, 7);
-                c.fill();
-                c.strokeStyle = a;
-                c.lineWidth = 3;
-                c.beginPath();
-                c.arc(W * (.2 + r() * .3), H * (.55 + r() * .2), W * .14, 0, 7);
-                c.stroke();
-                c.globalCompositeOperation = 'source-over';
+                if (fmt === 'freeform') {
+                    c.save();
+                    c.globalCompositeOperation = 'multiply';
+                    c.fillStyle = b;
+                    c.globalAlpha = 0.16;
+                    c.beginPath();
+                    c.arc(W * (.62 + (r() - 0.5) * .25), H * (.24 + (r() - 0.5) * .18), W * .26, 0, 7);
+                    c.fill();
+                    c.strokeStyle = a;
+                    c.lineWidth = 2.5;
+                    c.globalAlpha = 0.28;
+                    c.beginPath();
+                    c.arc(W * (.22 + (r() - 0.5) * .18), H * (.72 + (r() - 0.5) * .18), W * .13, 0, 7);
+                    c.stroke();
+                    c.restore();
+                } else {
+                    c.save();
+                    c.globalCompositeOperation = 'multiply';
+                    c.fillStyle = b;
+                    c.globalAlpha = 0.08;
+                    c.beginPath();
+                    c.arc(W * 0.88, H * 0.06, W * 0.09, 0, 7);
+                    c.fill();
+                    c.restore();
+                }
             }
             if (st == 'swiss') {
-                c.fillStyle = b;
-                c.beginPath();
-                c.arc(W * (.55 + r() * .3), H * (.15 + r() * .15), W * .14, 0, 7);
-                c.fill();
-                c.fillStyle = a;
-                c.fillRect(W * .08, H * .035, W * .84, 5);
-                c.fillRect(W * .08, H * .955, W * .84, 2);
+                if (fmt === 'freeform') {
+                    c.fillStyle = b;
+                    c.globalAlpha = 0.18;
+                    c.beginPath();
+                    c.arc(W * (.65 + r() * .2), H * (.18 + r() * .12), W * .14, 0, 7);
+                    c.fill();
+                    c.fillStyle = a;
+                    c.globalAlpha = 1;
+                    c.fillRect(W * .08, H * .035, W * .84, 4);
+                    c.fillRect(W * .08, H * .955, W * .84, 2);
+                } else {
+                    c.fillStyle = a;
+                    c.fillRect(W * .06, H * .018, W * .88, 2);
+                    c.fillRect(W * .06, H * .982, W * .88, 2);
+                }
             }
             if (st == 'mini') {
                 c.fillStyle = b;
                 c.beginPath();
-                c.arc(W * .08 + 6, H * .045, 6, 0, 7);
+                c.arc(W * .06 + 6, H * .025, 5, 0, 7);
                 c.fill();
                 c.fillStyle = a;
-                c.fillRect(W * .08, H * .955, W * .84, 1);
+                c.fillRect(W * .06, H * .975, W * .88, 1);
             }
             if (st == 'clip') {
-                const g = c.createLinearGradient(0, 0, 0, H);
-                g.addColorStop(0, pa);
-                g.addColorStop(1, b);
-                c.globalAlpha = .35;
-                c.fillStyle = g;
-                c.fillRect(0, 0, W, H);
-                c.globalAlpha = 1;
-                for (let i = 0; i < 6; i++) {
-                    const x = r() * W, y = r() * H, R = 14 + r() * 18;
-                    c.fillStyle = i % 2 ? a : b;
-                    c.beginPath();
-                    for (let j = 0; j < 10; j++) {
-                        const q = j % 2 ? R * .45 : R, t = j * PI / 5 - PI / 2;
-                        c.lineTo(x + q * Math.cos(t), y + q * Math.sin(t));
+                if (fmt === 'freeform') {
+                    const g = c.createLinearGradient(0, 0, 0, H);
+                    g.addColorStop(0, pa);
+                    g.addColorStop(1, b);
+                    c.globalAlpha = .22;
+                    c.fillStyle = g;
+                    c.fillRect(0, 0, W, H);
+                    c.globalAlpha = .4;
+                    for (let i = 0; i < 4; i++) {
+                        const x = W * (0.15 + r() * 0.7), y = H * (0.15 + r() * 0.7), R = 12 + r() * 14;
+                        c.fillStyle = i % 2 ? a : b;
+                        c.beginPath();
+                        for (let j = 0; j < 10; j++) {
+                            const q = j % 2 ? R * .45 : R, t = j * PI / 5 - PI / 2;
+                            c.lineTo(x + q * Math.cos(t), y + q * Math.sin(t));
+                        }
+                        c.fill();
                     }
-                    c.fill();
+                    c.globalAlpha = 1;
+                    c.strokeStyle = a;
+                    c.lineWidth = 6;
+                    c.strokeRect(5, 5, W - 10, H - 10);
+                } else {
+                    c.strokeStyle = a;
+                    c.lineWidth = 3;
+                    c.strokeRect(6, 6, W - 12, H - 12);
                 }
-                c.strokeStyle = a;
-                c.lineWidth = 10;
-                c.strokeRect(5, 5, W - 10, H - 10);
             }
             if (st == 'zine') {
-                for (let i = 0; i < 3; i++) {
+                if (fmt === 'freeform') {
+                    for (let i = 0; i < 2; i++) {
+                        c.save();
+                        c.translate(r() * W * 0.8 + W * 0.1, r() * H * .85 + H * 0.05);
+                        c.rotate((r() - .5) * 0.6);
+                        c.fillStyle = 'rgba(255,215,90,.65)';
+                        c.fillRect(-32, -9, 64, 18);
+                        c.restore();
+                    }
                     c.save();
-                    c.translate(r() * W, r() * H * .9);
-                    c.rotate(r() - .5);
-                    c.fillStyle = 'rgba(255,215,90,.75)';
-                    c.fillRect(-38, -11, 76, 22);
+                    c.strokeStyle = b;
+                    c.globalAlpha = 0.22;
+                    c.lineWidth = 3;
+                    c.lineCap = 'round';
+                    c.lineJoin = 'round';
+                    c.beginPath();
+                    const squigY = H * 0.78;
+                    let x = W * 0.1;
+                    c.moveTo(x, squigY);
+                    const segs = 10;
+                    const step = (W * .8) / segs;
+                    for (let i = 0; i < segs; i++) {
+                        x += step;
+                        const zig = (i % 2 ? -6 : 6);
+                        c.lineTo(x, squigY + zig);
+                    }
+                    c.stroke();
+                    c.restore();
+                } else {
+                    c.save();
+                    c.translate(W * 0.88, H * 0.035);
+                    c.rotate(0.18);
+                    c.fillStyle = 'rgba(255,215,90,.72)';
+                    c.fillRect(-24, -8, 48, 16);
                     c.restore();
                 }
-                // Zine squiggly hand-drawn doodle line
-                c.save();
-                c.strokeStyle = b;
-                c.lineWidth = 3.5 + r() * 2;
-                c.lineCap = 'round';
-                c.lineJoin = 'round';
-                c.beginPath();
-                const squigY = H * (.42 + (r() - 0.5) * 0.28);
-                const squigTilt = (r() - 0.5) * 0.12;
-                let x = W * (.05 + r() * .06);
-                c.moveTo(x, squigY);
-                const segs = 12 + Math.floor(r() * 6);
-                const step = (W * .82) / segs;
-                const amp = 6 + r() * 7;
-                for (let i = 0; i < segs; i++) {
-                    x += step;
-                    const zig = (i % 2 ? -amp : amp) + (r() - 0.5) * 3;
-                    const tiltY = (x - W * 0.5) * squigTilt;
-                    c.lineTo(x, squigY + zig + tiltY);
-                }
-                c.stroke();
-                c.restore();
             }
 
-            // Photo
-            if (PH.img) {
-                const w = W * .38 * S.ps, h = w * PH.img.height / PH.img.width;
-                const x = W * .52 + S.pos.p[0], y = H * .28 + S.pos.p[1];
-                c.save();
-                c.translate(x + w / 2, y + h / 2);
-                c.rotate(S.jit.p * PI / 180);
-                const isOpaque = S.photoBlend === 'opaque';
-                if (!isOpaque && st == 'riso') {
-                    c.globalCompositeOperation = 'multiply';
-                } else {
-                    c.globalCompositeOperation = 'source-over';
-                }
-                c.drawImage(PH.img, -w / 2, -h / 2, w, h);
-                c.globalCompositeOperation = 'source-over';
-                if (st == 'zine' || st == 'clip') {
-                    c.strokeStyle = '#fff';
-                    c.lineWidth = 8;
-                    c.strokeRect(-w / 2, -h / 2, w, h);
-                }
-                c.restore();
-                bx.push({ k: 'p', x, y, w, h });
-            }
-
+            // Shared typography formatting and line wrapping
             const F = (w, s, fam) => { c.font = `${w} ${s}px "${fam}", sans-serif`; };
             const wrap = (t, w) => {
                 const o = [];
-                for (const p of String(t).split('\n')) {
+                for (const p of String(t || '').split('\n')) {
                     let l = '';
                     for (const x of p.split(' ')) {
                         const m = l ? l + ' ' + x : x;
@@ -1602,153 +2100,1143 @@
                 return o;
             };
 
-            // 1. Pre-calculate Title
-            let tt = st == 'print' ? (f.title || '').toUpperCase() : (f.title || '');
-            let ts = baseDim * 0.155 * titleScale;
-            F(S.tw, ts, tf);
-            let titleLines = tt ? wrap(tt, mw) : [];
-            const maxTitleH = Math.max(H * 0.35, H * 0.32 * Math.max(1, titleScale * 1.45));
-            while ((titleLines.length * ts * 0.98 > maxTitleH || titleLines.some(l => c.measureText(l).width > mw * 1.04)) && ts > 18) {
-                ts *= 0.96;
-                F(S.tw, ts, tf);
-                titleLines = wrap(tt, mw);
-            }
-            let th = titleLines.length ? titleLines.length * ts * 0.98 : 0;
-
-            // 2. Pre-calculate Info block
-            const infoList = [
-                ['When', [f.date, f.time].filter(Boolean).join(' · ')],
-                ['Where', [f.venue, f.addr].filter(Boolean).join('\n')],
-                ['Host', f.host]
-            ].filter(([_, v]) => Boolean(v));
-
-            let infoHeaderAdv = baseDim * 0.034 * bodyScale;
-            let infoLineAdv = baseDim * 0.048 * bodyScale;
-            let infoItemGap = baseDim * 0.015 * bodyScale;
-            let ih = 0;
-            const measuredInfo = [];
-            F(S.bw, baseDim * 0.038 * bodyScale, bf);
-            for (const [l, v] of infoList) {
-                const lines = wrap(v, mw);
-                measuredInfo.push({ label: l, valLines: lines });
-                ih += infoHeaderAdv + lines.length * infoLineAdv + infoItemGap;
-            }
-
-            // 3. Pre-calculate Copy / Details block
-            const copyList = [];
-            if (f.sell) copyList.push({ t: f.sell, sz: baseDim * 0.044 * bodyScale, w: S.bw, fam: tf, col: a, isRsvp: false });
-            if (f.details) copyList.push({ t: f.details.split('\n').filter(Boolean).map(x => '— ' + x).join('\n'), sz: baseDim * 0.031 * bodyScale, w: S.bw, fam: bf, col: a, isRsvp: false });
-            if (f.perks) copyList.push({ t: f.perks, sz: baseDim * 0.031 * bodyScale, w: S.bw, fam: bf, col: a, isRsvp: false });
-            if (f.hidden) copyList.push({ t: f.hidden, sz: baseDim * 0.026 * bodyScale, w: 400, fam: bf, col: a, isRsvp: false });
-            if (f.rsvp) copyList.push({ t: 'Next: ' + f.rsvp, sz: baseDim * 0.033 * bodyScale, w: 700, fam: bf, col: b, isRsvp: true });
-
-            let mh = 0;
-            for (const item of copyList) {
-                F(item.w, item.sz, item.fam);
-                item.lines = wrap(item.t, mw);
-                item.stepH = item.sz * 1.3;
-                item.padH = item.sz * 0.35;
-                mh += item.lines.length * item.stepH + item.padH;
-            }
-
-            // 4. Natural Balanced Spacing between Blocks
-            const topMargin = Math.max(26, H * 0.055);
-            const botMargin = Math.max(26, H * 0.055);
-            const availH = H - topMargin - botMargin;
-            const totH = th + ih + mh;
-
-            const remainingSpace = Math.max(0, availH - totH);
-            const baseBlockGap = Math.max(8, (remainingSpace / 2.6) * gapScale);
-
-            const baseY = { t: 0, i: 0, m: 0 };
-            if (S.lay === 1) {
-                // Info top, Title mid, Copy lower
-                baseY.i = topMargin + (remainingSpace - baseBlockGap * 2) * 0.22;
-                baseY.t = baseY.i + ih + baseBlockGap;
-                baseY.m = baseY.t + th + baseBlockGap;
-            } else {
-                // Layout 0, 2, 3: Title top, Info mid, Copy lower
-                baseY.t = topMargin + (remainingSpace - baseBlockGap * 2) * 0.22;
-                baseY.i = baseY.t + th + baseBlockGap;
-                baseY.m = baseY.i + ih + baseBlockGap;
-            }
-
-            const defaultAl = [0, 0, 1, 2][S.lay];
-            const getAl = k => (S.al && S.al[k] !== undefined && S.al[k] !== null ? S.al[k] : defaultAl);
-            const getBaseX = k => {
-                const al = getAl(k);
-                if (al === 1) return W * 0.50;
-                if (al === 2) return W * 0.92;
-                return W * 0.08;
+            const getYearFromDate = dateStr => {
+                if (!dateStr) return new Date().getFullYear();
+                const m = String(dateStr).match(/\b(19\d\d|20\d\d)\b/);
+                return m ? m[1] : new Date().getFullYear();
             };
 
-            const blk = (k, fn) => {
-                const al = getAl(k);
-                const ox = getBaseX(k) + S.pos[k][0];
-                const oy = baseY[k] + S.pos[k][1];
+            // Universal flexible block renderer supporting alignment, jit tilt, and pos offsets
+            const blk = (k, fn, customBaseX, customBaseY, customMw) => {
+                const defaultAl = [0, 0, 1, 2][(S.lay || 0) % 4];
+                const al = (S.al && S.al[k] !== undefined && S.al[k] !== null ? S.al[k] : defaultAl);
+                const useMw = customMw !== undefined ? customMw : mw;
+                let baseX = customBaseX;
+                if (baseX === undefined) {
+                    if (al === 1) baseX = W * 0.50;
+                    else if (al === 2) baseX = W * 0.92;
+                    else baseX = W * 0.08;
+                }
+                const baseYPos = customBaseY !== undefined ? customBaseY : (baseY[k] || 0);
+                const ox = baseX + (S.pos[k] ? S.pos[k][0] : 0);
+                const oy = baseYPos + (S.pos[k] ? S.pos[k][1] : 0);
+                const rot = (S.jit && S.jit[k] !== undefined ? S.jit[k] : 0);
                 c.save();
                 c.translate(ox, oy);
-                c.rotate(S.jit[k] * PI / 180);
+                c.rotate(rot * PI / 180);
                 c.textAlign = ['left', 'center', 'right'][al];
                 c.textBaseline = 'top';
-                const h = fn(al);
+                const h = fn(al, ox, oy, useMw) || 20;
                 c.restore();
-                const boxX = ox - [0, mw / 2, mw][al];
-                bx.push({ k, x: boxX, y: oy, w: mw, h });
+                const boxX = ox - [0, useMw / 2, useMw][al];
+                bx.push({ k, x: boxX, y: oy, w: useMw, h });
             };
 
-            // Render Title block (t)
-            blk('t', () => {
+            const baseY = { t: 0, i: 0, m: 0 };
+
+            if (fmt === 'note') {
+                // ----------------------------------------------------------------
+                // FORMAT: NOTE PASSED IN CLASS (Folded loose-leaf with RSVP checkboxes)
+                // ----------------------------------------------------------------
+                const mx = W * 0.14, noteMw = W * 0.78;
+                const topMargin = Math.max(28, H * 0.052);
+
+                // Margin rule at W * 0.11 (to the left of text)
+                const marginLineX = W * 0.11;
+                c.save();
+                c.strokeStyle = a;
+                c.globalAlpha = 0.28;
+                c.lineWidth = 1.5;
+                c.beginPath();
+                c.moveTo(marginLineX, topMargin);
+                c.lineTo(marginLineX, H * 0.94);
+                c.stroke();
+
+                // 3 binder holes in the left margin
+                const holeX = W * 0.052;
+                const holeYs = [H * 0.15, H * 0.50, H * 0.85];
+                const holeR = Math.max(4, W * 0.016);
+                holeYs.forEach(hy => {
+                    c.beginPath();
+                    c.arc(holeX, hy, holeR, 0, Math.PI * 2);
+                    c.fillStyle = 'rgba(0,0,0,0.06)';
+                    c.fill();
+                    c.strokeStyle = 'rgba(0,0,0,0.12)';
+                    c.lineWidth = 1;
+                    c.stroke();
+                });
+
+                // Ruled notebook lines
+                const lineStep = Math.max(22, baseDim * 0.050 * bodyScale);
+                c.strokeStyle = b;
+                c.lineWidth = 0.8;
+                c.globalAlpha = 0.09;
+                for (let y = topMargin + lineStep * 1.2; y < H * 0.94; y += lineStep) {
+                    c.beginPath();
+                    c.moveTo(mx, y);
+                    c.lineTo(mx + noteMw, y);
+                    c.stroke();
+                }
+
+                if (S.lay === 1) {
+                    // Variant 1: Folded creases
+                    c.strokeStyle = a;
+                    c.globalAlpha = 0.20;
+                    c.lineWidth = 1.2;
+                    c.setLineDash([8, 6]);
+                    c.beginPath();
+                    c.moveTo(W * 0.04, H * 0.35); c.lineTo(W * 0.96, H * 0.35);
+                    c.moveTo(W * 0.04, H * 0.68); c.lineTo(W * 0.96, H * 0.68);
+                    c.stroke();
+                    c.setLineDash([]);
+                }
+                c.restore();
+
+                // Photo as taped polaroid snapshot
+                if (PH.img) {
+                    const pw = W * 0.30 * S.ps, ph = Math.min(H * 0.22, pw * PH.img.height / PH.img.width);
+                    const px = W * 0.60 + S.pos.p[0], py = topMargin + S.pos.p[1];
+                    c.save();
+                    c.translate(px + pw / 2, py + ph / 2);
+                    c.rotate((S.jit.p || 0) * PI / 180);
+                    c.fillStyle = '#ffffff';
+                    c.shadowColor = 'rgba(0,0,0,0.14)';
+                    c.shadowBlur = 6;
+                    c.fillRect(-pw / 2 - 4, -ph / 2 - 4, pw + 8, ph + 16);
+                    c.shadowBlur = 0;
+                    c.drawImage(PH.img, -pw / 2, -ph / 2, pw, ph);
+                    c.strokeStyle = 'rgba(0,0,0,0.12)';
+                    c.lineWidth = 1;
+                    c.strokeRect(-pw / 2, -ph / 2, pw, ph);
+
+                    // Translucent masking tape
+                    c.fillStyle = 'rgba(255, 238, 160, 0.78)';
+                    c.strokeStyle = 'rgba(215, 195, 120, 0.4)';
+                    c.lineWidth = 1;
+                    c.save();
+                    c.translate(-pw / 2 + 5, -ph / 2 - 2);
+                    c.rotate(-0.22);
+                    c.fillRect(-14, -5, 28, 12);
+                    c.strokeRect(-14, -5, 28, 12);
+                    c.restore();
+                    c.save();
+                    c.translate(pw / 2 - 5, -ph / 2 - 2);
+                    c.rotate(0.20);
+                    c.fillRect(-14, -5, 28, 12);
+                    c.strokeRect(-14, -5, 28, 12);
+                    c.restore();
+
+                    c.restore();
+                    bx.push({ k: 'p', x: px, y: py, w: pw, h: ph + 16 });
+                }
+
+                const targetTitleW = (PH.img ? noteMw * 0.52 : noteMw);
+                const titleHeader = 'FROM: ' + (f.host || 'DESK 3').toUpperCase() + ' · TOP SECRET';
+
+                // Precompute Title
+                let ts = baseDim * 0.082 * titleScale;
                 F(S.tw, ts, tf);
-                titleLines.forEach((l, i) => {
-                    if (st == 'clip') {
-                        c.fillStyle = b;
-                        c.fillText(l, 4, i * ts * .98 + 4);
-                    }
-                    c.fillStyle = a;
-                    c.fillText(l, 0, i * ts * .98);
-                });
-                return th;
-            });
+                let titleLines = wrap(f.title || 'Psst... Quick Note', targetTitleW);
+                while ((titleLines.length * ts > H * 0.20 || titleLines.some(l => c.measureText(l).width > targetTitleW * 1.04)) && ts > 15) {
+                    ts *= 0.95;
+                    F(S.tw, ts, tf);
+                    titleLines = wrap(f.title || 'Psst... Quick Note', targetTitleW);
+                }
+                let th = titleLines.length * ts * 1.08 + baseDim * 0.04;
 
-            // Render Info block (i)
-            blk('i', () => {
-                let y = 0;
-                measuredInfo.forEach(({ label, valLines }) => {
-                    F(700, baseDim * 0.024 * bodyScale, bf);
+                // Precompute Info
+                const infoLines = [
+                    ['WHEN', [f.date, f.time].filter(Boolean).join(' · ')],
+                    ['WHERE', [f.venue, f.addr].filter(Boolean).join(' · ')]
+                ].filter(([_, v]) => Boolean(v));
+                let infoStep = baseDim * 0.040 * bodyScale;
+                let ih = 0;
+                infoLines.forEach(([_, v]) => {
+                    F(S.bw, baseDim * 0.030 * bodyScale, bf);
+                    ih += wrap(v, noteMw).length * infoStep + baseDim * 0.015;
+                });
+
+                // Precompute Details Copy
+                const noteCopy = [];
+                if (f.sell) noteCopy.push({ t: f.sell, sz: baseDim * 0.035 * bodyScale, bold: true, col: a });
+                if (f.details) noteCopy.push({ t: f.details.split('\n').filter(Boolean).map(x => '— ' + x).join('\n'), sz: baseDim * 0.029 * bodyScale, bold: false, col: a });
+                if (f.perks) noteCopy.push({ t: '★ Perks: ' + f.perks, sz: baseDim * 0.028 * bodyScale, bold: false, col: b });
+                if (f.hidden) noteCopy.push({ t: 'Psst: ' + f.hidden, sz: baseDim * 0.026 * bodyScale, bold: false, col: a });
+
+                let mh = 0;
+                noteCopy.forEach(item => {
+                    F(item.bold ? 700 : S.bw, item.sz, bf);
+                    item.lines = wrap(item.t, noteMw);
+                    item.step = item.sz * 1.30;
+                    mh += item.lines.length * item.step + baseDim * 0.012;
+                });
+                const cbH = baseDim * 0.10 * bodyScale;
+                mh += cbH;
+
+                // Dynamic height auto-fit
+                const availH = H * 0.93 - topMargin;
+                let totH = th + ih + mh;
+                if (totH > availH) {
+                    const fitRatio = Math.max(0.68, availH / (totH + 12));
+                    bodyScale *= fitRatio;
+                    titleScale *= fitRatio;
+                    ts *= fitRatio;
+                    infoStep *= fitRatio;
+                    th *= fitRatio;
+                    ih *= fitRatio;
+                    mh *= fitRatio;
+                    noteCopy.forEach(item => {
+                        item.sz *= fitRatio;
+                        item.step *= fitRatio;
+                        F(item.bold ? 700 : S.bw, item.sz, bf);
+                        item.lines = wrap(item.t, noteMw);
+                    });
+                    totH = th + ih + mh;
+                }
+
+                const remainingSpace = Math.max(0, availH - totH);
+                const blockGap = Math.max(6, (remainingSpace / 2.6) * gapScale);
+
+                baseY.t = topMargin + remainingSpace * 0.10;
+                baseY.i = baseY.t + th + blockGap;
+                baseY.m = baseY.i + ih + blockGap;
+
+                // Render Title
+                blk('t', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    F(700, Math.max(9, baseDim * 0.021 * bodyScale), bf);
                     c.fillStyle = b;
-                    c.fillText(label.toUpperCase(), 0, y);
-                    y += infoHeaderAdv;
-                    F(S.bw, baseDim * 0.038 * bodyScale, bf);
-                    c.fillStyle = a;
-                    valLines.forEach(t => {
-                        c.fillText(t, 0, y);
-                        y += infoLineAdv;
-                    });
-                    y += infoItemGap;
-                });
-                return ih;
-            });
+                    c.fillText(titleHeader, 0, y);
+                    y += baseDim * 0.032 * bodyScale;
 
-            // Render Main details block (m)
-            blk('m', () => {
-                let y = 0;
-                copyList.forEach(it => {
-                    F(it.w, it.sz, it.fam);
-                    c.fillStyle = it.col;
-                    it.lines.forEach(l => {
+                    F(S.tw, ts, tf);
+                    c.fillStyle = a;
+                    titleLines.forEach(l => {
                         c.fillText(l, 0, y);
-                        y += it.stepH;
+                        y += ts * 1.05;
                     });
-                    y += it.padH;
+
+                    // Wavy underline
+                    c.save();
+                    c.strokeStyle = b;
+                    c.lineWidth = 2;
+                    c.lineCap = 'round';
+                    c.beginPath();
+                    const lineW = Math.min(targetTitleW, Math.max(60, c.measureText(titleLines[0] || '').width));
+                    for (let x = 0; x <= lineW; x += 8) {
+                        const wave = Math.sin(x * 0.35) * 1.8;
+                        if (x === 0) c.moveTo(x, y + 2 + wave);
+                        else c.lineTo(x, y + 2 + wave);
+                    }
+                    c.stroke();
+                    c.restore();
+                    return y + 6;
+                }, mx, baseY.t, targetTitleW);
+
+                // Render Info
+                blk('i', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    infoLines.forEach(([lbl, v]) => {
+                        F(700, Math.max(9, baseDim * 0.021 * bodyScale), bf);
+                        c.fillStyle = b;
+                        c.fillText(lbl + ':', 0, y);
+                        y += baseDim * 0.024 * bodyScale;
+
+                        F(S.bw, Math.max(10, baseDim * 0.030 * bodyScale), bf);
+                        c.fillStyle = a;
+                        wrap(v, noteMw).forEach(l => {
+                            c.fillText(l, 0, y);
+                            y += infoStep;
+                        });
+                        y += baseDim * 0.008;
+                    });
+                    return y;
+                }, mx, baseY.i, noteMw);
+
+                // Render Details & RSVP Checkboxes
+                blk('m', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    noteCopy.forEach(item => {
+                        F(item.bold ? 700 : S.bw, Math.max(9, item.sz), bf);
+                        c.fillStyle = item.col;
+                        item.lines.forEach(l => {
+                            c.fillText(l, 0, y);
+                            y += item.step;
+                        });
+                        y += baseDim * 0.010;
+                    });
+
+                    y += baseDim * 0.012;
+                    const rsvpPrompt = f.rsvp ? ('Next step: ' + f.rsvp) : 'WILL YOU BE THERE? (Check one or pass back!)';
+                    F(700, Math.max(9, baseDim * 0.024 * bodyScale), bf);
+                    c.fillStyle = b;
+                    c.fillText(rsvpPrompt.toUpperCase(), 0, y);
+                    y += baseDim * 0.034 * bodyScale;
+
+                    const boxSz = Math.round(Math.max(12, baseDim * 0.028 * bodyScale));
+                    const gap = Math.round(baseDim * 0.05 * bodyScale);
+                    const choices = ['YES', 'NO', 'MAYBE'];
+                    let cx = 0;
+
+                    choices.forEach((choice, idx) => {
+                        c.save();
+                        c.strokeStyle = a;
+                        c.lineWidth = 1.8;
+                        c.strokeRect(cx, y - 2, boxSz, boxSz);
+
+                        if (idx === 0) {
+                            // Hand-drawn checkmark in YES
+                            c.beginPath();
+                            c.moveTo(cx + 2, y + boxSz * 0.48);
+                            c.lineTo(cx + boxSz * 0.40, y + boxSz * 0.78);
+                            c.lineTo(cx + boxSz * 0.95, y + 1);
+                            c.strokeStyle = b;
+                            c.lineWidth = 2.4;
+                            c.lineCap = 'round';
+                            c.lineJoin = 'round';
+                            c.stroke();
+                        }
+                        c.restore();
+
+                        F(700, Math.max(9, baseDim * 0.024 * bodyScale), bf);
+                        c.fillStyle = a;
+                        c.fillText(choice, cx + boxSz + 6, y + 1);
+
+                        cx += boxSz + 6 + c.measureText(choice).width + gap;
+                    });
+
+                    return y + boxSz + 8;
+                }, mx, baseY.m, noteMw);
+
+            } else if (fmt === 'museum') {
+                // ----------------------------------------------------------------
+                // FORMAT: MUSEUM WALL LABEL (Formal gallery tombstone label)
+                // ----------------------------------------------------------------
+                const mx = W * 0.10, labelMw = W * 0.80;
+                const year = getYearFromDate(f.date);
+
+                let plaqueStartY = H * 0.08;
+                if (PH.img) {
+                    const pw = Math.min(labelMw, W * 0.52 * S.ps);
+                    const ph = Math.min(H * 0.38, pw * PH.img.height / PH.img.width);
+                    const px = (W - pw) / 2 + S.pos.p[0];
+                    const py = H * 0.06 + S.pos.p[1];
+
+                    c.save();
+                    c.fillStyle = '#ffffff';
+                    c.shadowColor = 'rgba(0,0,0,0.14)';
+                    c.shadowBlur = 8;
+                    c.fillRect(px - 8, py - 8, pw + 16, ph + 16);
+                    c.shadowBlur = 0;
+                    c.strokeStyle = b;
+                    c.lineWidth = 2;
+                    c.strokeRect(px - 8, py - 8, pw + 16, ph + 16);
+                    c.drawImage(PH.img, px, py, pw, ph);
+                    c.restore();
+
+                    bx.push({ k: 'p', x: px, y: py, w: pw, h: ph + 16 });
+                    plaqueStartY = py + ph + Math.max(20, H * 0.035);
+                }
+
+                // 1. Artist / Host & Title of Work
+                const artistText = (f.host || 'Artist Unknown').toUpperCase();
+                const artistSub = 'American, active ' + year;
+                const workTitle = f.title || 'Untitled Composition';
+
+                let titleSz = baseDim * 0.050 * titleScale;
+                F('italic ' + S.tw, titleSz, tf);
+                let workLines = wrap('“' + workTitle + '”, ' + year, labelMw);
+                let th = baseDim * 0.08 + workLines.length * titleSz * 1.15;
+
+                // 2. Info: On View & Hours
+                const infoLines = [
+                    ['ON VIEW', [f.venue, f.addr].filter(Boolean).join(' · ')],
+                    ['DATE & HOURS', [f.date, f.time].filter(Boolean).join(' · ')]
+                ].filter(([_, v]) => Boolean(v));
+                let ih = 0;
+                infoLines.forEach(([_, v]) => {
+                    F(S.bw, baseDim * 0.028 * bodyScale, bf);
+                    ih += wrap(v, labelMw).length * (baseDim * 0.036 * bodyScale) + baseDim * 0.016;
                 });
-                return mh;
-            });
+
+                // 3. Details / Medium / Notes / Accession
+                const mediumText = f.sell || f.perks || 'Cardboard, good snacks, and conversation';
+                const curNotes = f.details ? f.details.split('\n').filter(Boolean) : [];
+                const creditText = f.perks ? ('Gift of ' + f.perks) : 'Private collection · Gift of the attendees';
+                const rsvpText = f.rsvp ? ('Accession: ' + f.rsvp) : 'Admission complimentary with reservation';
+
+                let mh = baseDim * 0.040;
+                if (curNotes.length) mh += curNotes.length * (baseDim * 0.034 * bodyScale);
+                mh += baseDim * 0.036;
+                if (f.hidden) mh += baseDim * 0.034;
+                mh += baseDim * 0.046;
+
+                // Dynamic height auto-fit
+                const availH = H * 0.92 - plaqueStartY;
+                let totH = th + ih + mh;
+                if (totH > availH) {
+                    const fitRatio = Math.max(0.68, availH / (totH + 12));
+                    bodyScale *= fitRatio;
+                    titleScale *= fitRatio;
+                    titleSz *= fitRatio;
+                    th *= fitRatio;
+                    ih *= fitRatio;
+                    mh *= fitRatio;
+                    totH = th + ih + mh;
+                }
+
+                const remainingSpace = Math.max(0, availH - totH);
+                const blockGap = Math.max(8, (remainingSpace / 2.6) * gapScale);
+
+                baseY.t = plaqueStartY + remainingSpace * 0.12;
+                baseY.i = baseY.t + th + blockGap;
+                baseY.m = baseY.i + ih + blockGap;
+
+                // Render Title
+                blk('t', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    F(800, Math.max(11, baseDim * 0.034 * titleScale), bf);
+                    c.fillStyle = a;
+                    c.fillText(artistText, 0, y);
+                    y += baseDim * 0.038 * titleScale;
+
+                    F(400, Math.max(9, baseDim * 0.022 * bodyScale), bf);
+                    c.fillStyle = b;
+                    c.fillText(artistSub, 0, y);
+                    y += baseDim * 0.036 * bodyScale;
+
+                    F('italic ' + S.tw, titleSz, tf);
+                    c.fillStyle = a;
+                    workLines.forEach(l => {
+                        c.fillText(l, 0, y);
+                        y += titleSz * 1.15;
+                    });
+
+                    // Hairline divider rule
+                    y += baseDim * 0.012;
+                    c.fillStyle = a;
+                    c.fillRect(0, y, useMw, 1);
+                    return y + 6;
+                }, mx, baseY.t, labelMw);
+
+                // Render Info
+                blk('i', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    infoLines.forEach(([lbl, v]) => {
+                        F(700, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                        c.fillStyle = b;
+                        c.fillText(lbl, 0, y);
+                        y += baseDim * 0.024 * bodyScale;
+
+                        F(S.bw, Math.max(9, baseDim * 0.029 * bodyScale), bf);
+                        c.fillStyle = a;
+                        wrap(v, useMw).forEach(l => {
+                            c.fillText(l, 0, y);
+                            y += baseDim * 0.035 * bodyScale;
+                        });
+                        y += baseDim * 0.010;
+                    });
+                    return y;
+                }, mx, baseY.i, labelMw);
+
+                // Render Details
+                blk('m', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    F(500, Math.max(9, baseDim * 0.026 * bodyScale), bf);
+                    c.fillStyle = a;
+                    wrap(mediumText, useMw).forEach(l => {
+                        c.fillText(l, 0, y);
+                        y += baseDim * 0.033 * bodyScale;
+                    });
+                    y += baseDim * 0.012;
+
+                    if (curNotes.length) {
+                        F(400, Math.max(9, baseDim * 0.024 * bodyScale), bf);
+                        c.fillStyle = a;
+                        curNotes.forEach(n => {
+                            c.fillText('— ' + n, 0, y);
+                            y += baseDim * 0.032 * bodyScale;
+                        });
+                        y += baseDim * 0.012;
+                    }
+
+                    F(400, Math.max(8, baseDim * 0.021 * bodyScale), bf);
+                    c.fillStyle = b;
+                    c.fillText(creditText, 0, y);
+                    y += baseDim * 0.030 * bodyScale;
+
+                    if (f.hidden) {
+                        F(400, Math.max(8, baseDim * 0.020 * bodyScale), bf);
+                        c.fillStyle = a;
+                        c.fillText('Notice: ' + f.hidden, 0, y);
+                        y += baseDim * 0.028 * bodyScale;
+                    }
+
+                    y += baseDim * 0.008;
+                    F(700, Math.max(8, baseDim * 0.021 * bodyScale), bf);
+                    c.fillStyle = a;
+                    c.fillText(rsvpText, 0, y);
+
+                    // Museum accession stamp
+                    F(700, Math.max(8, baseDim * 0.017), 'Space Mono');
+                    c.fillStyle = b;
+                    c.textAlign = 'right';
+                    c.fillText('ACC. NO. ' + year + '.' + (S.seed || '07'), useMw, y);
+                    c.textAlign = 'left';
+
+                    return y + baseDim * 0.028;
+                }, mx, baseY.m, labelMw);
+
+            } else if (fmt === 'callsheet') {
+                // ----------------------------------------------------------------
+                // FORMAT: PRODUCTION CALL SHEET (Film/theater daily grid)
+                // ----------------------------------------------------------------
+                const mx = W * 0.06, callMw = W * 0.88;
+                const topMargin = Math.max(26, H * 0.046);
+
+                // Top Header Masthead
+                c.save();
+                c.fillStyle = a;
+                c.fillRect(mx, topMargin, callMw, 3);
+                F(700, Math.max(8, Math.min(11, baseDim * 0.018)), 'Space Mono');
+                c.fillStyle = a;
+                let leftMast = 'DAILY PRODUCTION CALL SHEET';
+                let rightMast = (f.hidden && /weather/i.test(f.hidden)) ? f.hidden.toUpperCase() : 'CLEAR / 64°F';
+                if (c.measureText(leftMast).width + c.measureText(rightMast).width + 24 > callMw) {
+                    leftMast = 'CALL SHEET';
+                }
+                c.fillText(leftMast, mx, topMargin + 8);
+                c.textAlign = 'right';
+                c.fillText(rightMast, mx + callMw, topMargin + 8);
+                c.textAlign = 'left';
+                c.fillRect(mx, topMargin + 23, callMw, 1);
+                c.restore();
+
+                const contentStartY = topMargin + 32;
+
+                // Photo slot as Location Still plate
+                if (PH.img) {
+                    const pw = W * 0.30 * S.ps, ph = Math.min(H * 0.20, pw * PH.img.height / PH.img.width);
+                    const px = W * 0.64 + S.pos.p[0], py = contentStartY + S.pos.p[1];
+                    c.save();
+                    c.strokeStyle = a;
+                    c.lineWidth = 1.5;
+                    c.strokeRect(px, py, pw, ph);
+                    c.drawImage(PH.img, px, py, pw, ph);
+                    c.fillStyle = a;
+                    c.fillRect(px, py + ph - 16, pw, 16);
+                    F(700, 9, 'Space Mono');
+                    c.fillStyle = pa;
+                    c.fillText('LOCATION STILL · CAM A', px + 6, py + ph - 4);
+                    c.restore();
+                    bx.push({ k: 'p', x: px, y: py, w: pw, h: ph });
+                }
+
+                const targetTitleW = (PH.img ? callMw * 0.54 : callMw);
+
+                // Title Block sizing
+                let ts = baseDim * 0.076 * titleScale;
+                F(S.tw, ts, tf);
+                let titleLines = wrap((f.title || 'PRODUCTION TITLE').toUpperCase(), targetTitleW);
+
+                // Precalculate Call Box sizing
+                const timeVal = (f.time || '19:00 SHARP').toUpperCase();
+                let timeSz = Math.max(12, baseDim * 0.034 * bodyScale);
+                F(800, timeSz, 'Space Mono');
+                while (c.measureText(timeVal).width > targetTitleW - 24 && timeSz > 10) {
+                    timeSz *= 0.92;
+                    F(800, timeSz, 'Space Mono');
+                }
+                const callW = Math.min(targetTitleW, Math.max(180, c.measureText(timeVal).width + 24));
+                const callH = Math.max(46, 20 + timeSz + 10);
+                let th = titleLines.length * ts * 1.05 + baseDim * 0.04 + callH + 8;
+
+                // Location Block sizing
+                const infoStep = baseDim * 0.036 * bodyScale;
+                const locLines = [
+                    ['SHOOTING LOCATION', f.venue || 'TBD'],
+                    ['BASECAMP ADDRESS', f.addr || 'TBD']
+                ];
+                let labelW = Math.max(150, baseDim * 0.22);
+                let locRows = 0;
+                locLines.forEach(([lbl, val]) => {
+                    F(S.bw, baseDim * 0.028 * bodyScale, bf);
+                    locRows += wrap(val, callMw - labelW - 24).length;
+                });
+                let ih = 28 + locRows * infoStep + 8;
+
+                // Details & Crew Block sizing
+                const crewRoster = f.roles ? f.roles.split('\n').filter(Boolean) : [
+                    (f.host || 'Lead') + ' (Director / EP)',
+                    'Dev Patel (Craft Services)',
+                    'Priya Sharma (Atmosphere)',
+                    'Sam Vance (Audio / Soundtrack)'
+                ];
+                const wardrobe = f.details ? f.details.split('\n').filter(Boolean) : [];
+                const catering = f.perks ? ('CATERING: ' + f.perks) : '';
+                const notes = f.sell ? ('SCENE NOTES: ' + f.sell) : '';
+                const rsvpCall = f.rsvp ? ('CONFIRM CALL TIME: ' + f.rsvp) : 'CONFIRM CALL TIME WITH PRODUCTION OFFICE';
+
+                let mh = 26 + Math.min(4, crewRoster.length) * (baseDim * 0.032 * bodyScale) + 10;
+                if (wardrobe.length) mh += (baseDim * 0.030 * bodyScale) * Math.min(2, wardrobe.length) + 8;
+                if (catering) mh += baseDim * 0.030 * bodyScale + 6;
+                if (notes) mh += baseDim * 0.030 * bodyScale + 6;
+                mh += 30; // footer
+
+                // Dynamic height auto-fit
+                const availH = H * 0.94 - contentStartY;
+                let totH = th + ih + mh;
+                if (totH > availH) {
+                    const fitRatio = Math.max(0.68, availH / (totH + 12));
+                    bodyScale *= fitRatio;
+                    titleScale *= fitRatio;
+                    ts *= fitRatio;
+                    th *= fitRatio;
+                    ih *= fitRatio;
+                    mh *= fitRatio;
+                    totH = th + ih + mh;
+                }
+
+                const remainingSpace = Math.max(0, availH - totH);
+                const blockGap = Math.max(6, (remainingSpace / 2.6) * gapScale);
+
+                baseY.t = contentStartY + remainingSpace * 0.10;
+                baseY.i = baseY.t + th + blockGap;
+                baseY.m = baseY.i + ih + blockGap;
+
+                // Render Title & Call Time Block
+                blk('t', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    F(700, Math.max(9, baseDim * 0.021 * bodyScale), 'Space Mono');
+                    c.fillStyle = b;
+                    c.fillText('PRODUCTION TITLE', 0, y);
+                    y += baseDim * 0.026 * bodyScale;
+
+                    F(S.tw, ts, tf);
+                    c.fillStyle = a;
+                    titleLines.forEach(l => {
+                        c.fillText(l, 0, y);
+                        y += ts * 1.05;
+                    });
+                    y += baseDim * 0.012;
+
+                    // Prominent General Call Time Box
+                    c.save();
+                    c.strokeStyle = a;
+                    c.lineWidth = 1.5;
+                    c.strokeRect(0, y, callW, callH);
+                    c.fillStyle = b;
+                    c.fillRect(0, y, callW, 18);
+
+                    F(700, 9, 'Space Mono');
+                    c.fillStyle = pa;
+                    c.textBaseline = 'middle';
+                    c.fillText('GENERAL CREW CALL', 8, y + 9);
+
+                    F(800, timeSz, 'Space Mono');
+                    c.fillStyle = a;
+                    c.fillText(timeVal, 8, y + 20 + (callH - 20) / 2);
+                    c.textBaseline = 'top';
+                    c.restore();
+
+                    return y + callH + 6;
+                }, W * 0.06, baseY.t, targetTitleW);
+
+                // Render Location & Basecamp Block
+                blk('i', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    c.save();
+                    c.strokeStyle = a;
+                    c.lineWidth = 1;
+                    c.strokeRect(0, y, useMw, ih);
+                    c.fillStyle = b;
+                    c.fillRect(0, y, useMw, 18);
+                    F(700, 9, 'Space Mono');
+                    c.fillStyle = pa;
+                    c.fillText('DEPARTMENT: LOCATION & BASECAMP', 8, y + 13);
+
+                    y += 26;
+                    locLines.forEach(([lbl, val]) => {
+                        F(700, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                        c.fillStyle = b;
+                        c.fillText(lbl + ':', 10, y);
+
+                        F(S.bw, Math.max(9, baseDim * 0.028 * bodyScale), bf);
+                        c.fillStyle = a;
+                        const lines = wrap(val, useMw - labelW - 24);
+                        lines.forEach(l => {
+                            c.fillText(l, labelW + 12, y);
+                            y += infoStep;
+                        });
+                    });
+                    c.restore();
+                    return ih;
+                }, W * 0.06, baseY.i, callMw);
+
+                // Render Crew Roster, Wardrobe, Catering, Confirmation
+                blk('m', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    c.save();
+                    c.strokeStyle = a;
+                    c.lineWidth = 1;
+                    c.strokeRect(0, y, useMw, mh);
+                    c.fillStyle = b;
+                    c.fillRect(0, y, useMw, 18);
+                    F(700, 9, 'Space Mono');
+                    c.fillStyle = pa;
+                    c.fillText('DEPARTMENT HEADS & CREW ROSTER', 8, y + 13);
+                    y += 24;
+
+                    // Crew rows
+                    F(S.bw, Math.max(9, baseDim * 0.025 * bodyScale), bf);
+                    c.fillStyle = a;
+                    crewRoster.slice(0, 4).forEach(r => {
+                        c.fillText('• ' + r, 10, y);
+                        y += baseDim * 0.032 * bodyScale;
+                    });
+                    y += 4;
+
+                    // Divider
+                    c.fillStyle = a;
+                    c.fillRect(0, y, useMw, 1);
+                    y += 6;
+
+                    // Wardrobe & requirements
+                    if (wardrobe.length) {
+                        F(700, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                        c.fillStyle = b;
+                        c.fillText('WARDROBE & GEAR:', 10, y);
+                        F(S.bw, Math.max(9, baseDim * 0.025 * bodyScale), bf);
+                        c.fillStyle = a;
+                        wardrobe.slice(0, 2).forEach(w => {
+                            wrap('— ' + w, useMw - 160).forEach(l => {
+                                c.fillText(l, 150, y);
+                                y += baseDim * 0.028 * bodyScale;
+                            });
+                        });
+                    }
+
+                    if (catering) {
+                        F(700, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                        c.fillStyle = b;
+                        wrap(catering, useMw - 24).forEach(l => {
+                            c.fillText(l, 10, y);
+                            y += baseDim * 0.028 * bodyScale;
+                        });
+                    }
+
+                    if (notes) {
+                        F(500, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                        c.fillStyle = a;
+                        wrap(notes, useMw - 24).forEach(l => {
+                            c.fillText(l, 10, y);
+                            y += baseDim * 0.028 * bodyScale;
+                        });
+                    }
+
+                    // Call confirmation footer
+                    c.fillStyle = a;
+                    c.fillRect(0, mh - 24, useMw, 24);
+                    F(700, 10, 'Space Mono');
+                    c.fillStyle = pa;
+                    c.textBaseline = 'middle';
+                    c.fillText(rsvpCall.toUpperCase(), 10, mh - 12);
+                    c.textBaseline = 'top';
+
+                    c.restore();
+                    return mh;
+                }, W * 0.06, baseY.m, callMw);
+
+            } else if (fmt === 'classifieds') {
+                // ----------------------------------------------------------------
+                // FORMAT: CLASSIFIEDS (Vintage newspaper classified listings)
+                // ----------------------------------------------------------------
+                const mx = W * 0.06, newsMw = W * 0.88;
+                const topMargin = Math.max(26, H * 0.046);
+                const mastheadH = Math.max(46, baseDim * 0.085);
+
+                // Newspaper Masthead Banner
+                c.save();
+                c.strokeStyle = a;
+                c.lineWidth = 1.5;
+                c.strokeRect(mx, topMargin, newsMw, mastheadH);
+                c.strokeRect(mx + 2, topMargin + 2, newsMw - 4, mastheadH - 4);
+
+                c.textAlign = 'center';
+                c.textBaseline = 'middle';
+                F(900, Math.max(13, baseDim * 0.036), tf);
+                c.fillStyle = a;
+                c.fillText('THE CLASSIFIED ADVERTISER', W / 2, topMargin + mastheadH * 0.38);
+
+                F(700, Math.max(8, baseDim * 0.016), 'Space Mono');
+                c.fillStyle = b;
+                const dateHeader = 'VOL. XLVIII · ' + (f.date || 'WEEKEND EDITION').toUpperCase() + ' · SEC. C';
+                c.fillText(dateHeader, W / 2, topMargin + mastheadH * 0.74);
+                c.textBaseline = 'top';
+                c.restore();
+
+                const contentStartY = topMargin + mastheadH + 12;
+
+                // Multi-column calculations
+                const numCols = S.lay === 1 ? 3 : 2;
+                const colGap = baseDim * 0.032 * gapScale;
+                const colW = (newsMw - (numCols - 1) * colGap) / numCols;
+
+                // Column divider hairline rules
+                c.save();
+                c.strokeStyle = a;
+                c.globalAlpha = 0.22;
+                c.lineWidth = 1;
+                for (let i = 1; i < numCols; i++) {
+                    const cx = mx + i * (colW + colGap) - colGap / 2;
+                    c.beginPath();
+                    c.moveTo(cx, contentStartY);
+                    c.lineTo(cx, H * 0.94);
+                    c.stroke();
+                }
+                c.restore();
+
+                // Photo slot as classified newspaper thumbnail in column 2
+                let col2PhotoH = 0;
+                if (PH.img) {
+                    const pw = colW * S.ps;
+                    const ph = Math.min(H * 0.22, pw * PH.img.height / PH.img.width);
+                    const col2X = mx + (colW + colGap) + S.pos.p[0];
+                    const py = contentStartY + S.pos.p[1];
+
+                    c.save();
+                    c.strokeStyle = a;
+                    c.lineWidth = 1;
+                    c.strokeRect(col2X, py, pw, ph);
+                    c.drawImage(PH.img, col2X, py, pw, ph);
+
+                    F(500, Math.max(8, baseDim * 0.018), bf);
+                    c.fillStyle = b;
+                    c.fillText('Fig. 1: ' + (f.title || 'Notice Illustration'), col2X, py + ph + 4);
+                    c.restore();
+
+                    bx.push({ k: 'p', x: col2X, y: py, w: pw, h: ph + 16 });
+                    col2PhotoH = ph + 22;
+                }
+
+                // Inverted crisp Category Header Banner helper
+                const catHeader = (label, y, targetColW) => {
+                    c.save();
+                    c.fillStyle = a;
+                    const barH = Math.max(14, baseDim * 0.024 * bodyScale);
+                    c.fillRect(0, y, targetColW, barH);
+                    F(800, Math.max(8, baseDim * 0.017 * bodyScale), 'Space Mono');
+                    c.fillStyle = pa;
+                    c.textBaseline = 'middle';
+                    c.fillText('✦ ' + label.toUpperCase(), 5, y + barH / 2);
+                    c.textBaseline = 'top';
+                    c.restore();
+                    return barH + 7;
+                };
+
+                // Dynamic height auto-fitting
+                const availH = H * 0.94 - contentStartY;
+                let th = baseDim * 0.26 * bodyScale;
+                let ih = baseDim * 0.22 * bodyScale;
+                let mh = baseDim * 0.40 * bodyScale;
+
+                if (th + ih > availH) {
+                    const fitRatio = Math.max(0.68, availH / (th + ih + 10));
+                    bodyScale *= fitRatio;
+                    titleScale *= fitRatio;
+                    th *= fitRatio;
+                    ih *= fitRatio;
+                    mh *= fitRatio;
+                }
+
+                baseY.t = contentStartY;
+                baseY.i = contentStartY + th + baseDim * 0.018 * gapScale;
+                baseY.m = contentStartY + (PH.img ? col2PhotoH : 0);
+
+                // Column 1 - Title / Lead Notice Block
+                blk('t', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    y += catHeader('FOR SALE / SPECIAL NOTICE', y, colW);
+
+                    F(800, Math.max(11, baseDim * 0.040 * titleScale), tf);
+                    c.fillStyle = a;
+                    const lines = wrap(f.title || 'SATURDAY NIGHT FOR SALE', colW);
+                    lines.forEach(l => {
+                        c.fillText(l, 0, y);
+                        y += baseDim * 0.044 * titleScale;
+                    });
+                    y += baseDim * 0.012;
+
+                    if (f.sell) {
+                        F(500, Math.max(9, baseDim * 0.027 * bodyScale), bf);
+                        c.fillStyle = a;
+                        wrap(f.sell, colW).forEach(l => {
+                            c.fillText(l, 0, y);
+                            y += baseDim * 0.033 * bodyScale;
+                        });
+                        y += baseDim * 0.008;
+                    }
+
+                    if (f.host) {
+                        F(700, Math.max(8, baseDim * 0.020 * bodyScale), bf);
+                        c.fillStyle = b;
+                        c.fillText('ADVERTISER: ' + f.host, 0, y);
+                        y += baseDim * 0.026 * bodyScale;
+                    }
+                    return y;
+                }, mx, baseY.t, colW);
+
+                // Column 1 (lower) - Schedule & Logistics Block
+                blk('i', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    y += catHeader('TIME & LOCATION', y, colW);
+
+                    const items = [
+                        ['DATE', f.date],
+                        ['TIME', f.time],
+                        ['PLACE', f.venue],
+                        ['ADDR', f.addr]
+                    ].filter(([_, v]) => Boolean(v));
+
+                    items.forEach(([lbl, v]) => {
+                        F(700, Math.max(8, baseDim * 0.019 * bodyScale), 'Space Mono');
+                        c.fillStyle = b;
+                        c.fillText(lbl + ':', 0, y);
+                        const lw = Math.max(48, c.measureText(lbl + ': ').width);
+
+                        F(S.bw, Math.max(9, baseDim * 0.026 * bodyScale), bf);
+                        c.fillStyle = a;
+                        wrap(v, colW - lw - 4).forEach(l => {
+                            c.fillText(l, lw + 2, y);
+                            y += baseDim * 0.032 * bodyScale;
+                        });
+                    });
+                    return y;
+                }, mx, baseY.i, colW);
+
+                // Column 2 - Details, Terms & Inquiries Block
+                const col2X = mx + (colW + colGap);
+                blk('m', (al, ox, oy, useMw) => {
+                    let y = 0;
+                    y += catHeader('TERMS & CONDITIONS', y, colW);
+
+                    if (f.details) {
+                        F(S.bw, Math.max(9, baseDim * 0.025 * bodyScale), bf);
+                        c.fillStyle = a;
+                        f.details.split('\n').filter(Boolean).forEach(d => {
+                            wrap('• ' + d, colW).forEach(l => {
+                                c.fillText(l, 0, y);
+                                y += baseDim * 0.031 * bodyScale;
+                            });
+                        });
+                        y += baseDim * 0.012;
+                    }
+
+                    if (f.perks) {
+                        y += catHeader('INCLUSIONS & PERKS', y, colW);
+                        F(S.bw, Math.max(9, baseDim * 0.025 * bodyScale), bf);
+                        c.fillStyle = a;
+                        wrap('★ ' + f.perks, colW).forEach(l => {
+                            c.fillText(l, 0, y);
+                            y += baseDim * 0.031 * bodyScale;
+                        });
+                        y += baseDim * 0.012;
+                    }
+
+                    if (f.hidden) {
+                        y += catHeader('FINE PRINT & RULES', y, colW);
+                        F(400, Math.max(8, baseDim * 0.021 * bodyScale), bf);
+                        c.fillStyle = b;
+                        wrap(f.hidden, colW).forEach(l => {
+                            c.fillText(l, 0, y);
+                            y += baseDim * 0.026 * bodyScale;
+                        });
+                        y += baseDim * 0.012;
+                    }
+
+                    y += catHeader('HOW TO INQUIRE', y, colW);
+                    F(700, Math.max(9, baseDim * 0.026 * bodyScale), bf);
+                    c.fillStyle = a;
+                    const rsvpLines = wrap(f.rsvp ? ('Next step: ' + f.rsvp) : 'Reply directly to advertiser', colW);
+                    rsvpLines.forEach(l => {
+                        c.fillText(l, 0, y);
+                        y += baseDim * 0.032 * bodyScale;
+                    });
+
+                    return y;
+                }, col2X, baseY.m, colW);
+
+            } else {
+                // ----------------------------------------------------------------
+                // FORMAT: FREEFORM (Default flowing flyer layout)
+                // ----------------------------------------------------------------
+                // Photo
+                if (PH.img) {
+                    const w = W * .38 * S.ps, h = w * PH.img.height / PH.img.width;
+                    const x = W * .52 + S.pos.p[0], y = H * .28 + S.pos.p[1];
+                    c.save();
+                    c.translate(x + w / 2, y + h / 2);
+                    c.rotate(S.jit.p * PI / 180);
+                    const isOpaque = S.photoBlend === 'opaque';
+                    if (!isOpaque && st == 'riso') {
+                        c.globalCompositeOperation = 'multiply';
+                    } else {
+                        c.globalCompositeOperation = 'source-over';
+                    }
+                    c.drawImage(PH.img, -w / 2, -h / 2, w, h);
+                    c.globalCompositeOperation = 'source-over';
+                    if (st == 'zine' || st == 'clip') {
+                        c.strokeStyle = '#fff';
+                        c.lineWidth = 6;
+                        c.strokeRect(-w / 2, -h / 2, w, h);
+                    }
+                    c.restore();
+                    bx.push({ k: 'p', x, y, w, h });
+                }
+
+                // 1. Pre-calculate Title
+                let tt = st == 'print' ? (f.title || '').toUpperCase() : (f.title || '');
+                let ts = baseDim * 0.145 * titleScale;
+                F(S.tw, ts, tf);
+                let titleLines = tt ? wrap(tt, mw) : [];
+                const maxTitleH = Math.max(H * 0.32, H * 0.30 * Math.max(1, titleScale * 1.35));
+                while ((titleLines.length * ts * 0.98 > maxTitleH || titleLines.some(l => c.measureText(l).width > mw * 1.04)) && ts > 16) {
+                    ts *= 0.95;
+                    F(S.tw, ts, tf);
+                    titleLines = wrap(tt, mw);
+                }
+                let th = titleLines.length ? titleLines.length * ts * 0.98 : 0;
+
+                // 2. Pre-calculate Info block
+                const infoList = [
+                    ['When', [f.date, f.time].filter(Boolean).join(' · ')],
+                    ['Where', [f.venue, f.addr].filter(Boolean).join('\n')],
+                    ['Host', f.host]
+                ].filter(([_, v]) => Boolean(v));
+
+                let infoHeaderAdv = baseDim * 0.032 * bodyScale;
+                let infoLineAdv = baseDim * 0.044 * bodyScale;
+                let infoItemGap = baseDim * 0.014 * bodyScale;
+                let ih = 0;
+                const measuredInfo = [];
+                F(S.bw, baseDim * 0.036 * bodyScale, bf);
+                for (const [l, v] of infoList) {
+                    const lines = wrap(v, mw);
+                    measuredInfo.push({ label: l, valLines: lines });
+                    ih += infoHeaderAdv + lines.length * infoLineAdv + infoItemGap;
+                }
+
+                // 3. Pre-calculate Copy / Details block
+                const copyList = [];
+                if (f.sell) copyList.push({ t: f.sell, sz: baseDim * 0.040 * bodyScale, w: S.bw, fam: tf, col: a });
+                if (f.details) copyList.push({ t: f.details.split('\n').filter(Boolean).map(x => '— ' + x).join('\n'), sz: baseDim * 0.029 * bodyScale, w: S.bw, fam: bf, col: a });
+                if (f.perks) copyList.push({ t: f.perks, sz: baseDim * 0.029 * bodyScale, w: S.bw, fam: bf, col: a });
+                if (f.hidden) copyList.push({ t: f.hidden, sz: baseDim * 0.025 * bodyScale, w: 400, fam: bf, col: a });
+                if (f.rsvp) copyList.push({ t: 'Next: ' + f.rsvp, sz: baseDim * 0.031 * bodyScale, w: 700, fam: bf, col: b });
+
+                let mh = 0;
+                for (const item of copyList) {
+                    F(item.w, item.sz, item.fam);
+                    item.lines = wrap(item.t, mw);
+                    item.stepH = item.sz * 1.28;
+                    item.padH = item.sz * 0.30;
+                    mh += item.lines.length * item.stepH + item.padH;
+                }
+
+                // 4. Dynamic Auto-Fit Calculation
+                const topMargin = Math.max(26, H * 0.052);
+                const botMargin = Math.max(26, H * 0.052);
+                const availH = H - topMargin - botMargin;
+                let totH = th + ih + mh;
+
+                if (totH + 16 > availH) {
+                    const fitRatio = Math.max(0.65, (availH - 16) / totH);
+                    bodyScale *= fitRatio;
+                    titleScale *= fitRatio;
+                    ts *= fitRatio;
+                    th *= fitRatio;
+                    ih *= fitRatio;
+                    infoHeaderAdv *= fitRatio;
+                    infoLineAdv *= fitRatio;
+                    infoItemGap *= fitRatio;
+                    mh = 0;
+                    for (const item of copyList) {
+                        item.sz *= fitRatio;
+                        F(item.w, item.sz, item.fam);
+                        item.lines = wrap(item.t, mw);
+                        item.stepH = item.sz * 1.28;
+                        item.padH = item.sz * 0.30;
+                        mh += item.lines.length * item.stepH + item.padH;
+                    }
+                    totH = th + ih + mh;
+                }
+
+                const remainingSpace = Math.max(0, availH - totH);
+                const baseBlockGap = Math.max(6, (remainingSpace / 2.6) * gapScale);
+
+                if (S.lay === 1) {
+                    baseY.i = topMargin + (remainingSpace - baseBlockGap * 2) * 0.20;
+                    baseY.t = baseY.i + ih + baseBlockGap;
+                    baseY.m = baseY.t + th + baseBlockGap;
+                } else {
+                    baseY.t = topMargin + (remainingSpace - baseBlockGap * 2) * 0.20;
+                    baseY.i = baseY.t + th + baseBlockGap;
+                    baseY.m = baseY.i + ih + baseBlockGap;
+                }
+
+                // Render Title block (t)
+                blk('t', () => {
+                    F(S.tw, ts, tf);
+                    titleLines.forEach((l, i) => {
+                        if (st == 'clip') {
+                            c.fillStyle = b;
+                            c.fillText(l, 3, i * ts * .98 + 3);
+                        }
+                        c.fillStyle = a;
+                        c.fillText(l, 0, i * ts * .98);
+                    });
+                    return th;
+                });
+
+                // Render Info block (i)
+                blk('i', () => {
+                    let y = 0;
+                    measuredInfo.forEach(({ label, valLines }) => {
+                        F(700, Math.max(9, baseDim * 0.023 * bodyScale), bf);
+                        c.fillStyle = b;
+                        c.fillText(label.toUpperCase(), 0, y);
+                        y += infoHeaderAdv;
+                        F(S.bw, Math.max(9, baseDim * 0.035 * bodyScale), bf);
+                        c.fillStyle = a;
+                        valLines.forEach(t => {
+                            c.fillText(t, 0, y);
+                            y += infoLineAdv;
+                        });
+                        y += infoItemGap;
+                    });
+                    return ih;
+                });
+
+                // Render Main details block (m)
+                blk('m', () => {
+                    let y = 0;
+                    copyList.forEach(it => {
+                        F(it.w, Math.max(9, it.sz), it.fam);
+                        c.fillStyle = it.col;
+                        it.lines.forEach(l => {
+                            c.fillText(l, 0, y);
+                            y += it.stepH;
+                        });
+                        y += it.padH;
+                    });
+                    return mh;
+                });
+            }
 
             // Textures rendering
             if (S.tex === 'grain') {
                 c.globalCompositeOperation = 'multiply';
-                c.globalAlpha = .16;
+                c.globalAlpha = .08;
                 c.fillStyle = c.createPattern(NZ, 'repeat');
                 c.fillRect(0, 0, W, H);
                 c.globalAlpha = 1;
@@ -1881,7 +3369,14 @@
                     c.fillRect(activeBox.x + activeBox.w + pad - sz / 2, activeBox.y + activeBox.h + pad - sz / 2, sz, sz);
 
                     // Badge at top-left
-                    const nameMap = { t: 'Title', i: 'Event Info', m: 'Details & Copy', p: 'Photo' };
+                    const formatNames = {
+                        freeform: { t: 'Title', i: 'Event Info', m: 'Details & Copy', p: 'Photo' },
+                        note: { t: 'Secret Header', i: 'When & Where', m: 'Message & RSVP', p: 'Snapshot' },
+                        museum: { t: 'Work & Artist', i: 'On View & Hours', m: 'Medium & Details', p: 'Artwork' },
+                        callsheet: { t: 'Production Header', i: 'Location & Basecamp', m: 'Crew & Wardrobe', p: 'Location Still' },
+                        classifieds: { t: 'Listing Headline', i: 'Time & Place', m: 'Terms & Disclaimers', p: 'Listing Image' }
+                    };
+                    const nameMap = formatNames[S.format || 'freeform'] || formatNames.freeform;
                     const label = '✦ ' + (nameMap[activeTarget] || activeTarget);
                     c.font = '700 11px "Space Mono", monospace';
                     const tw = c.measureText(label).width;
@@ -1963,12 +3458,14 @@
             }
 
             // Update Active Item Title
-            const titles = {
-                t: 'Title Placement',
-                i: 'Event Info Placement',
-                m: 'Details Placement',
-                p: 'Photo Placement'
+            const formatTitles = {
+                freeform: { t: 'Title Placement', i: 'Event Info Placement', m: 'Details Placement', p: 'Photo Placement' },
+                note: { t: 'Secret Header Placement', i: 'When & Where Placement', m: 'Message & RSVP Placement', p: 'Snapshot Placement' },
+                museum: { t: 'Work & Artist Placement', i: 'On View & Hours Placement', m: 'Medium & Details Placement', p: 'Artwork Placement' },
+                callsheet: { t: 'Production Header Placement', i: 'Location & Basecamp Placement', m: 'Crew & Wardrobe Placement', p: 'Location Still Placement' },
+                classifieds: { t: 'Listing Headline Placement', i: 'Time & Place Placement', m: 'Terms & Disclaimers Placement', p: 'Listing Image Placement' }
             };
+            const titles = formatTitles[S.format || 'freeform'] || formatTitles.freeform;
             const titleEl = $('#active-item-title');
             if (titleEl) {
                 titleEl.textContent = hasTarget ? (titles[target] || 'Item Placement') : 'No Item Selected';
@@ -1976,7 +3473,7 @@
             }
 
             // Update Alignment Buttons (active state & disabled)
-            const defaultAl = [0, 0, 1, 2][S.lay];
+            const defaultAl = [0, 0, 1, 2][(S.lay || 0) % 4];
             const curAl = (hasTarget && S.al && S.al[target] !== undefined && S.al[target] !== null) ? S.al[target] : defaultAl;
             document.querySelectorAll('#pos-align-group .align-btn').forEach(btn => {
                 btn.classList.toggle('active', hasTarget && +btn.dataset.align === curAl);
@@ -2112,7 +3609,48 @@
             updateUndoRedo();
         }
 
+        function updateFieldLabelsAndHints() {
+            const fmt = S.format || 'freeform';
+            const cfg = FORMATS[fmt] || FORMATS.freeform;
+
+            $$('#format-tabs .target-tab').forEach(b => {
+                const active = b.dataset.fmt === fmt;
+                b.classList.toggle('active', active);
+                b.setAttribute('aria-selected', active ? 'true' : 'false');
+            });
+
+            const badgeEl = $('#format-badge');
+            if (badgeEl) badgeEl.textContent = cfg.badge;
+            const descEl = $('#format-desc');
+            if (descEl) descEl.textContent = cfg.desc;
+
+            FD.forEach(([k, defaultLabel]) => {
+                const labelEl = $('#label_' + k);
+                if (labelEl) {
+                    labelEl.textContent = (cfg.labels && cfg.labels[k]) || defaultLabel;
+                }
+                const hintEl = $('#hint_' + k);
+                if (hintEl) {
+                    hintEl.textContent = (cfg.hints && cfg.hints[k]) || '';
+                }
+                const wrapEl = $('#field_wrap_' + k);
+                if (wrapEl) {
+                    if (k === 'roles') {
+                        wrapEl.style.display = (fmt === 'callsheet') ? 'block' : 'none';
+                    }
+                }
+            });
+        }
+
         function sync() {
+            if (!S.format) S.format = 'freeform';
+            updateFieldLabelsAndHints();
+
+            FD.forEach(([k]) => {
+                const el = $('#f_' + k);
+                if (el) el.value = (S.f && S.f[k] !== undefined) ? S.f[k] : '';
+            });
+
             $('#st').value = S.style;
             $('#asp').value = S.asp;
             S.pal.forEach((v, i) => $('#c' + i).value = v);
@@ -2181,7 +3719,27 @@
         }
 
         // Initialize UI Elements
-        $('#fields').innerHTML = FD.map(([k, l, t]) => `<label>${l}${t ? `<textarea id="f_${k}" rows="2"></textarea>` : `<input id="f_${k}">`}</label>`).join('');
+        $('#fields').innerHTML = FD.map(([k, l, t]) => {
+            const isHidden = k === 'hidden';
+            const chipsHtml = isHidden ? `
+                <div class="hidden-chips-box">
+                    <div class="chips-prompt">What hidden questions need to be answered?</div>
+                    <div class="chips-row">
+                        <button type="button" class="chip-btn" data-chip="parking" title="Add parking info">+ Parking</button>
+                        <button type="button" class="chip-btn" data-chip="plusones" title="Add plus-one policy">+ Plus-ones</button>
+                        <button type="button" class="chip-btn" data-chip="kids" title="Add kids policy">+ Kids</button>
+                        <button type="button" class="chip-btn" data-chip="food" title="Add food/drink info">+ Food/Drink</button>
+                        <button type="button" class="chip-btn" data-chip="ends" title="Add wrap time">+ When it ends</button>
+                    </div>
+                </div>` : '';
+            return `<label id="field_wrap_${k}">
+                <span class="field-label-text" id="label_${k}">${l}</span>
+                ${t ? `<textarea id="f_${k}" rows="2"></textarea>` : `<input id="f_${k}">`}
+                <span class="field-hint" id="hint_${k}"></span>
+                ${chipsHtml}
+            </label>`;
+        }).join('');
+
         $('#st').innerHTML = Object.entries(ST).map(([k, v]) => `<option value="${k}">${v.n}</option>`).join('');
         $('#fo').innerHTML = PR.map((p, i) => `<option value="${i}">${p[0]} + ${p[1]}</option>`).join('');
         $('#tex').innerHTML = TEXTURES.map(t => `<option value="${t.id}">${t.n}</option>`).join('');
@@ -2194,11 +3752,58 @@
             i.outerHTML = `<button class="dice" data-d="${act}" aria-label="${title}" title="${title}"><svg><use href="#die"/></svg></button>`;
         });
 
+        // Format tabs selector interaction
+        $$('#format-tabs .target-tab').forEach(btn => {
+            btn.onclick = () => {
+                const fmt = btn.dataset.fmt;
+                if (!fmt || fmt === S.format) return;
+                S.format = fmt;
+                const maxLay = (FORMATS[fmt] && FORMATS[fmt].layouts) || 1;
+                if (S.lay >= maxLay) S.lay = 0;
+                sync();
+                sv();
+                push();
+            };
+        });
+
+        // Hidden questions quick-add chips
+        const CHIP_TEXTS = {
+            parking: ['Street parking only / driveway open', 'Easy street parking on adjacent block', 'Driveway available for guests'],
+            plusones: ['Bring a friend / RSVP required', 'No plus-ones this time, space is limited', 'Plus-ones welcome with advance notice'],
+            kids: ['Kids welcome', 'Adults only please', 'Family friendly · all ages welcome'],
+            food: ['Snacks provided / BYOB', 'Dinner served around eight', 'Light refreshments & cold beverages on site'],
+            ends: ['Wrap at 10 PM', 'Until late', 'Event concludes around 11 PM']
+        };
+
+        $$('.chip-btn').forEach(btn => {
+            btn.onclick = () => {
+                const type = btn.dataset.chip;
+                const options = CHIP_TEXTS[type] || [];
+                if (!options.length) return;
+                const cur = S.f.hidden || '';
+                let nextText = options[0];
+                const matchIndex = options.findIndex(opt => cur.includes(opt));
+                if (matchIndex >= 0) {
+                    const nextOpt = options[(matchIndex + 1) % options.length];
+                    S.f.hidden = cur.replace(options[matchIndex], nextOpt);
+                } else {
+                    S.f.hidden = cur ? (cur.trimEnd() + '\n' + nextText) : nextText;
+                }
+                const field = $('#f_hidden');
+                if (field) field.value = S.f.hidden;
+                render();
+                sv();
+                push();
+            };
+        });
+
         // Event Listeners for inputs
         FD.forEach(([k]) => {
             const e = $('#f_' + k);
-            e.oninput = () => { S.f[k] = e.value; render(); sv(); };
-            e.onchange = push;
+            if (e) {
+                e.oninput = () => { S.f[k] = e.value; render(); sv(); };
+                e.onchange = push;
+            }
         });
 
         ['tw', 'bw', 'ts', 'bs', 'ps'].forEach(k => {
@@ -2221,7 +3826,9 @@
             S.pal = PL[s.p].slice();
             S.font = s.f;
             S.tex = s.x;
-            S.lay = s.l;
+            const fmt = S.format || 'freeform';
+            const maxLay = (FORMATS[fmt] && FORMATS[fmt].layouts) || LAY.length;
+            S.lay = s.l % maxLay;
             S.pos = Z();
             S.gap = 1;
             S.jit = v == 'zine' ? { t: -2, i: 1, m: 0, p: 3 } : J();
@@ -2429,8 +4036,12 @@
                 S.font = pickOtherIndex(S.font, PR.length);
             },
             lay() {
-                S.lay = pickOtherIndex(S.lay, LAY.length);
-                S.pos = Z();
+                const fmt = S.format || 'freeform';
+                const maxLay = (FORMATS[fmt] && FORMATS[fmt].layouts) || LAY.length;
+                if (maxLay > 1) {
+                    S.lay = pickOtherIndex(S.lay % maxLay, maxLay);
+                    S.pos = Z();
+                }
             },
             tex() {
                 const texIds = TEXTURES.map(t => t.id);
@@ -2456,9 +4067,12 @@
                 S.seed = next;
             },
             copy() {
+                const fmt = S.format || 'freeform';
+                const pool = EX_FORMATS[fmt] || EX_FORMATS.freeform;
                 const curTitle = S.f.title;
-                const otherExamples = EX.filter(e => e.title !== curTitle);
-                S.f = { ...(otherExamples[ri(otherExamples.length)] || EX[0]) };
+                const otherExamples = pool.filter(e => e.title !== curTitle);
+                const chosen = otherExamples.length ? otherExamples[ri(otherExamples.length)] : pool[0];
+                S.f = Object.assign({}, S.f, chosen);
             }
         };
 
@@ -2533,7 +4147,11 @@
             if (!f) return;
             f.text().then(t => {
                 const j = JSON.parse(t), n = j.S;
-                if (look) n.f = S.f;
+                if (look) {
+                    n.f = S.f;
+                    n.format = S.format;
+                }
+                if (!n.format) n.format = 'freeform';
                 S = Object.assign({}, S, n);
                 if (!look) setPhoto(j.photo || '');
                 sync();
