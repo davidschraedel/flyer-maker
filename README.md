@@ -2,7 +2,7 @@
 
 A browser-based flyer and invite maker for events that should look like a person made them, not an AI chatbot.
 
-Most generated invites share the same tells: neon palettes, confetti, clip-art icons on every line, every inch filled, and copy that announces the vibe instead of showing it. Flyer Maker is built to avoid those. It gives you real design constraints, plenty of control, and a little controlled randomness, so you can fix a typo or move one word without regenerating the whole thing or opening a full design suite.
+Most generated invites share the same tells: neon palettes, confetti, clip-art icons on every line, every inch filled, and copy that announces the vibe instead of showing it. Flyer Maker is built to avoid those. It gives the user real design constraints, plenty of control, and a little controlled randomness, so the user can fix a typo or move one word without regenerating the whole thing or opening a full design suite.
 
 ## Principles
 
@@ -11,7 +11,7 @@ Most generated invites share the same tells: neon palettes, confetti, clip-art i
 - **Whitespace on purpose.** Empty space is a design tool.
 - **Show, don't tell.** The example copy models specific details over adjectives ("Chili on the stove. Dessert around nine.").
 - **Answer the hidden questions.** Parking, plus-ones, kids, when it ends, and an easy next step.
-- **You stay in control.** Styles set defaults, but every color, font, weight, tilt, and position can be overridden.
+- **The user stays in control.** Styles set defaults, but every color, font, weight, tilt, and position can be overridden.
 
 ## Features
 
@@ -53,4 +53,4 @@ Most generated invites share the same tells: neon palettes, confetti, clip-art i
 
 ## Privacy
 
-Everything runs locally in your browser. Your text, photos, and recipes stay on your device and are never transmitted to an external server. Web fonts load from Google Fonts.
+Everything runs locally in the browser. Text, photos, and recipes stay on device and are never transmitted to an external server. Web fonts load from Google Fonts.
