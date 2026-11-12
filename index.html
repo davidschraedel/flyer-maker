@@ -34,9 +34,9 @@
 
         @media(prefers-color-scheme:dark) {
             :root:not([data-theme=light]) {
-                --bg: #17150f;
-                --fg: #f4ecd8;
-                --card: #26231b;
+                --bg: #201e19;
+                --fg: #eee6d6;
+                --card: #1b1913;
                 --acc: #ff6a4d;
                 --acc2: #d9ae22;
                 --ok-bg: #173d24;
@@ -48,8 +48,8 @@
         }
 
         :root[data-theme=dark] {
-            --bg: #17150f;
-            --fg: #f4ecd8;
+            --bg: #1a1814;
+            --fg: #eee6d6;
             --card: #26231b;
             --acc: #ff6a4d;
             --acc2: #d9ae22;
@@ -1048,14 +1048,21 @@
                             <label class="format-label">Document Format</label>
                             <span class="format-badge" id="format-badge">Flyer</span>
                         </div>
-                        <div class="target-tabs format-tabs" id="format-tabs" role="tablist" aria-label="Document format selector">
-                            <button type="button" class="target-tab active" data-fmt="freeform" role="tab" aria-selected="true" title="Freeform Flyer">Freeform</button>
-                            <button type="button" class="target-tab" data-fmt="note" role="tab" aria-selected="false" title="Note Passed in Class">Class Note</button>
-                            <button type="button" class="target-tab" data-fmt="museum" role="tab" aria-selected="false" title="Museum Wall Label">Wall Label</button>
-                            <button type="button" class="target-tab" data-fmt="callsheet" role="tab" aria-selected="false" title="Production Call Sheet">Call Sheet</button>
-                            <button type="button" class="target-tab" data-fmt="classifieds" role="tab" aria-selected="false" title="Vintage Classifieds">Classifieds</button>
+                        <div class="target-tabs format-tabs" id="format-tabs" role="tablist"
+                            aria-label="Document format selector">
+                            <button type="button" class="target-tab active" data-fmt="freeform" role="tab"
+                                aria-selected="true" title="Freeform Flyer">Freeform</button>
+                            <button type="button" class="target-tab" data-fmt="note" role="tab" aria-selected="false"
+                                title="Note Passed in Class">Class Note</button>
+                            <button type="button" class="target-tab" data-fmt="museum" role="tab" aria-selected="false"
+                                title="Museum Wall Label">Wall Label</button>
+                            <button type="button" class="target-tab" data-fmt="callsheet" role="tab"
+                                aria-selected="false" title="Production Call Sheet">Call Sheet</button>
+                            <button type="button" class="target-tab" data-fmt="classifieds" role="tab"
+                                aria-selected="false" title="Vintage Classifieds">Classifieds</button>
                         </div>
-                        <div class="format-desc" id="format-desc">Classic flowing flyer with Title, Info, and Details blocks.</div>
+                        <div class="format-desc" id="format-desc">Classic flowing flyer with Title, Info, and Details
+                            blocks.</div>
                     </div>
                     <div id="fields"></div>
                     <div class="bar" style="margin-top: 10px; justify-content: space-between;">
@@ -2234,63 +2241,73 @@
                 const titleHeader = 'FROM: ' + (f.host || 'DESK 3').toUpperCase() + ' · TOP SECRET';
 
                 // Precompute Title
-                let ts = baseDim * 0.082 * titleScale;
+                let ts = baseDim * 0.105 * titleScale;
                 F(S.tw, ts, tf);
                 let titleLines = wrap(f.title || 'Psst... Quick Note', targetTitleW);
-                while ((titleLines.length * ts > H * 0.20 || titleLines.some(l => c.measureText(l).width > targetTitleW * 1.04)) && ts > 15) {
+                while ((titleLines.length * ts > H * 0.22 || titleLines.some(l => c.measureText(l).width > targetTitleW * 1.04)) && ts > 16) {
                     ts *= 0.95;
                     F(S.tw, ts, tf);
                     titleLines = wrap(f.title || 'Psst... Quick Note', targetTitleW);
                 }
-                let th = titleLines.length * ts * 1.08 + baseDim * 0.04;
+                const titleHeaderH = Math.max(12, baseDim * 0.026 * bodyScale) * 1.35;
+                let th = titleHeaderH + titleLines.length * ts * 1.06 + baseDim * 0.020;
 
                 // Precompute Info
                 const infoLines = [
                     ['WHEN', [f.date, f.time].filter(Boolean).join(' · ')],
                     ['WHERE', [f.venue, f.addr].filter(Boolean).join(' · ')]
                 ].filter(([_, v]) => Boolean(v));
-                let infoStep = baseDim * 0.040 * bodyScale;
+                let infoStep = Math.max(16, baseDim * 0.044 * bodyScale);
+                let infoLabelH = Math.max(11, baseDim * 0.026 * bodyScale) * 1.30;
                 let ih = 0;
                 infoLines.forEach(([_, v]) => {
-                    F(S.bw, baseDim * 0.030 * bodyScale, bf);
-                    ih += wrap(v, noteMw).length * infoStep + baseDim * 0.015;
+                    F(S.bw, Math.max(12, baseDim * 0.036 * bodyScale), bf);
+                    ih += infoLabelH + wrap(v, noteMw).length * infoStep + baseDim * 0.010;
                 });
 
                 // Precompute Details Copy
                 const noteCopy = [];
-                if (f.sell) noteCopy.push({ t: f.sell, sz: baseDim * 0.035 * bodyScale, bold: true, col: a });
-                if (f.details) noteCopy.push({ t: f.details.split('\n').filter(Boolean).map(x => '— ' + x).join('\n'), sz: baseDim * 0.029 * bodyScale, bold: false, col: a });
-                if (f.perks) noteCopy.push({ t: '★ Perks: ' + f.perks, sz: baseDim * 0.028 * bodyScale, bold: false, col: b });
-                if (f.hidden) noteCopy.push({ t: 'Psst: ' + f.hidden, sz: baseDim * 0.026 * bodyScale, bold: false, col: a });
+                if (f.sell) noteCopy.push({ t: f.sell, sz: Math.max(13, baseDim * 0.040 * bodyScale), bold: true, col: a });
+                if (f.details) noteCopy.push({ t: f.details.split('\n').filter(Boolean).map(x => '— ' + x).join('\n'), sz: Math.max(12, baseDim * 0.034 * bodyScale), bold: false, col: a });
+                if (f.perks) noteCopy.push({ t: '★ Perks: ' + f.perks, sz: Math.max(11, baseDim * 0.032 * bodyScale), bold: false, col: b });
+                if (f.hidden) noteCopy.push({ t: 'Psst: ' + f.hidden, sz: Math.max(11, baseDim * 0.030 * bodyScale), bold: false, col: a });
 
                 let mh = 0;
                 noteCopy.forEach(item => {
                     F(item.bold ? 700 : S.bw, item.sz, bf);
                     item.lines = wrap(item.t, noteMw);
-                    item.step = item.sz * 1.30;
-                    mh += item.lines.length * item.step + baseDim * 0.012;
+                    item.step = item.sz * 1.28;
+                    mh += item.lines.length * item.step + baseDim * 0.010;
                 });
-                const cbH = baseDim * 0.10 * bodyScale;
+                const rsvpPromptH = Math.max(12, baseDim * 0.028 * bodyScale) * 1.35;
+                const cbSz = Math.round(Math.max(16, baseDim * 0.036 * bodyScale));
+                const cbH = rsvpPromptH + cbSz + 12;
                 mh += cbH;
 
                 // Dynamic height auto-fit
                 const availH = H * 0.93 - topMargin;
                 let totH = th + ih + mh;
                 if (totH > availH) {
-                    const fitRatio = Math.max(0.68, availH / (totH + 12));
+                    const fitRatio = Math.max(0.55, availH / (totH + 16));
                     bodyScale *= fitRatio;
                     titleScale *= fitRatio;
                     ts *= fitRatio;
                     infoStep *= fitRatio;
-                    th *= fitRatio;
-                    ih *= fitRatio;
-                    mh *= fitRatio;
+                    infoLabelH *= fitRatio;
+                    th = titleHeaderH * fitRatio + titleLines.length * ts * 1.06 + 8;
+                    ih = 0;
+                    infoLines.forEach(([_, v]) => {
+                        ih += infoLabelH + wrap(v, noteMw).length * infoStep + baseDim * 0.010 * fitRatio;
+                    });
+                    mh = 0;
                     noteCopy.forEach(item => {
                         item.sz *= fitRatio;
                         item.step *= fitRatio;
                         F(item.bold ? 700 : S.bw, item.sz, bf);
                         item.lines = wrap(item.t, noteMw);
+                        mh += item.lines.length * item.step + baseDim * 0.010 * fitRatio;
                     });
+                    mh += cbH * fitRatio;
                     totH = th + ih + mh;
                 }
 
@@ -2304,16 +2321,16 @@
                 // Render Title
                 blk('t', (al, ox, oy, useMw) => {
                     let y = 0;
-                    F(700, Math.max(9, baseDim * 0.021 * bodyScale), bf);
+                    F(700, Math.max(11, baseDim * 0.026 * bodyScale), bf);
                     c.fillStyle = b;
                     c.fillText(titleHeader, 0, y);
-                    y += baseDim * 0.032 * bodyScale;
+                    y += titleHeaderH;
 
                     F(S.tw, ts, tf);
                     c.fillStyle = a;
                     titleLines.forEach(l => {
                         c.fillText(l, 0, y);
-                        y += ts * 1.05;
+                        y += ts * 1.06;
                     });
 
                     // Wavy underline
@@ -2330,34 +2347,34 @@
                     }
                     c.stroke();
                     c.restore();
-                    return y + 6;
+                    return th;
                 }, mx, baseY.t, targetTitleW);
 
                 // Render Info
                 blk('i', (al, ox, oy, useMw) => {
                     let y = 0;
                     infoLines.forEach(([lbl, v]) => {
-                        F(700, Math.max(9, baseDim * 0.021 * bodyScale), bf);
+                        F(700, Math.max(11, baseDim * 0.026 * bodyScale), bf);
                         c.fillStyle = b;
                         c.fillText(lbl + ':', 0, y);
-                        y += baseDim * 0.024 * bodyScale;
+                        y += infoLabelH;
 
-                        F(S.bw, Math.max(10, baseDim * 0.030 * bodyScale), bf);
+                        F(S.bw, Math.max(12, baseDim * 0.036 * bodyScale), bf);
                         c.fillStyle = a;
                         wrap(v, noteMw).forEach(l => {
                             c.fillText(l, 0, y);
                             y += infoStep;
                         });
-                        y += baseDim * 0.008;
+                        y += baseDim * 0.010;
                     });
-                    return y;
+                    return ih;
                 }, mx, baseY.i, noteMw);
 
                 // Render Details & RSVP Checkboxes
                 blk('m', (al, ox, oy, useMw) => {
                     let y = 0;
                     noteCopy.forEach(item => {
-                        F(item.bold ? 700 : S.bw, Math.max(9, item.sz), bf);
+                        F(item.bold ? 700 : S.bw, Math.max(10, item.sz), bf);
                         c.fillStyle = item.col;
                         item.lines.forEach(l => {
                             c.fillText(l, 0, y);
@@ -2368,28 +2385,27 @@
 
                     y += baseDim * 0.012;
                     const rsvpPrompt = f.rsvp ? ('Next step: ' + f.rsvp) : 'WILL YOU BE THERE? (Check one or pass back!)';
-                    F(700, Math.max(9, baseDim * 0.024 * bodyScale), bf);
+                    F(700, Math.max(11, baseDim * 0.028 * bodyScale), bf);
                     c.fillStyle = b;
                     c.fillText(rsvpPrompt.toUpperCase(), 0, y);
-                    y += baseDim * 0.034 * bodyScale;
+                    y += rsvpPromptH;
 
-                    const boxSz = Math.round(Math.max(12, baseDim * 0.028 * bodyScale));
-                    const gap = Math.round(baseDim * 0.05 * bodyScale);
                     const choices = ['YES', 'NO', 'MAYBE'];
+                    const gap = Math.round(baseDim * 0.05 * bodyScale);
                     let cx = 0;
 
                     choices.forEach((choice, idx) => {
                         c.save();
                         c.strokeStyle = a;
                         c.lineWidth = 1.8;
-                        c.strokeRect(cx, y - 2, boxSz, boxSz);
+                        c.strokeRect(cx, y - 2, cbSz, cbSz);
 
                         if (idx === 0) {
                             // Hand-drawn checkmark in YES
                             c.beginPath();
-                            c.moveTo(cx + 2, y + boxSz * 0.48);
-                            c.lineTo(cx + boxSz * 0.40, y + boxSz * 0.78);
-                            c.lineTo(cx + boxSz * 0.95, y + 1);
+                            c.moveTo(cx + 2, y + cbSz * 0.48);
+                            c.lineTo(cx + cbSz * 0.40, y + cbSz * 0.78);
+                            c.lineTo(cx + cbSz * 0.95, y + 1);
                             c.strokeStyle = b;
                             c.lineWidth = 2.4;
                             c.lineCap = 'round';
@@ -2398,14 +2414,14 @@
                         }
                         c.restore();
 
-                        F(700, Math.max(9, baseDim * 0.024 * bodyScale), bf);
+                        F(700, Math.max(11, baseDim * 0.028 * bodyScale), bf);
                         c.fillStyle = a;
-                        c.fillText(choice, cx + boxSz + 6, y + 1);
+                        c.fillText(choice, cx + cbSz + 6, y + 1);
 
-                        cx += boxSz + 6 + c.measureText(choice).width + gap;
+                        cx += cbSz + 6 + c.measureText(choice).width + gap;
                     });
 
-                    return y + boxSz + 8;
+                    return mh;
                 }, mx, baseY.m, noteMw);
 
             } else if (fmt === 'museum') {
@@ -2443,20 +2459,42 @@
                 const artistSub = 'American, active ' + year;
                 const workTitle = f.title || 'Untitled Composition';
 
-                let titleSz = baseDim * 0.050 * titleScale;
+                let artistSz = Math.max(15, baseDim * 0.048 * titleScale);
+                F(800, artistSz, bf);
+                let artistLines = wrap(artistText, labelMw);
+                let artistH = artistLines.length * (artistSz * 1.25);
+
+                let artistSubSz = Math.max(11, baseDim * 0.028 * bodyScale);
+                F(400, artistSubSz, bf);
+                let artistSubLines = wrap(artistSub, labelMw);
+                let artistSubH = artistSubLines.length * (artistSubSz * 1.35);
+
+                let titleSz = Math.max(18, baseDim * 0.068 * titleScale);
                 F('italic ' + S.tw, titleSz, tf);
                 let workLines = wrap('“' + workTitle + '”, ' + year, labelMw);
-                let th = baseDim * 0.08 + workLines.length * titleSz * 1.15;
+                while ((workLines.length * titleSz > H * 0.18 || workLines.some(l => c.measureText(l).width > labelMw * 1.02)) && titleSz > 16) {
+                    titleSz *= 0.94;
+                    F('italic ' + S.tw, titleSz, tf);
+                    workLines = wrap('“' + workTitle + '”, ' + year, labelMw);
+                }
+                let workTitleH = workLines.length * titleSz * 1.18;
+                let th = artistH + artistSubH + workTitleH + baseDim * 0.022 + 6;
 
                 // 2. Info: On View & Hours
                 const infoLines = [
                     ['ON VIEW', [f.venue, f.addr].filter(Boolean).join(' · ')],
                     ['DATE & HOURS', [f.date, f.time].filter(Boolean).join(' · ')]
                 ].filter(([_, v]) => Boolean(v));
+                let infoLblSz = Math.max(11, baseDim * 0.025 * bodyScale);
+                let infoValSz = Math.max(13, baseDim * 0.035 * bodyScale);
+                let infoStep = infoValSz * 1.25;
                 let ih = 0;
-                infoLines.forEach(([_, v]) => {
-                    F(S.bw, baseDim * 0.028 * bodyScale, bf);
-                    ih += wrap(v, labelMw).length * (baseDim * 0.036 * bodyScale) + baseDim * 0.016;
+                const wrappedInfo = [];
+                infoLines.forEach(([lbl, v]) => {
+                    F(S.bw, infoValSz, bf);
+                    const lines = wrap(v, labelMw);
+                    wrappedInfo.push({ lbl, lines });
+                    ih += infoLblSz * 1.30 + lines.length * infoStep + baseDim * 0.014;
                 });
 
                 // 3. Details / Medium / Notes / Accession
@@ -2465,23 +2503,92 @@
                 const creditText = f.perks ? ('Gift of ' + f.perks) : 'Private collection · Gift of the attendees';
                 const rsvpText = f.rsvp ? ('Accession: ' + f.rsvp) : 'Admission complimentary with reservation';
 
-                let mh = baseDim * 0.040;
-                if (curNotes.length) mh += curNotes.length * (baseDim * 0.034 * bodyScale);
-                mh += baseDim * 0.036;
-                if (f.hidden) mh += baseDim * 0.034;
-                mh += baseDim * 0.046;
+                let medSz = Math.max(12, baseDim * 0.033 * bodyScale);
+                let noteSz = Math.max(11, baseDim * 0.030 * bodyScale);
+                let credSz = Math.max(10, baseDim * 0.026 * bodyScale);
+                let rsvpSz = Math.max(11, baseDim * 0.027 * bodyScale);
+
+                F(500, medSz, bf);
+                const medLines = wrap(mediumText, labelMw);
+                let mh = medLines.length * (medSz * 1.28) + baseDim * 0.012;
+
+                const wrappedNotes = [];
+                if (curNotes.length) {
+                    F(400, noteSz, bf);
+                    curNotes.forEach(n => {
+                        const lines = wrap('— ' + n, labelMw);
+                        wrappedNotes.push(lines);
+                        mh += lines.length * (noteSz * 1.30);
+                    });
+                    mh += baseDim * 0.012;
+                }
+
+                F(400, credSz, bf);
+                const credLines = wrap(creditText, labelMw);
+                mh += credLines.length * (credSz * 1.32) + baseDim * 0.010;
+
+                let hidLines = [];
+                if (f.hidden) {
+                    F(400, credSz, bf);
+                    hidLines = wrap('Notice: ' + f.hidden, labelMw);
+                    mh += hidLines.length * (credSz * 1.32) + baseDim * 0.008;
+                }
+
+                F(700, rsvpSz, bf);
+                const rsvpLines = wrap(rsvpText, labelMw);
+                F(700, Math.max(9, baseDim * 0.022), 'Space Mono');
+                const accStampText = 'ACC. NO. ' + year + '.' + (S.seed || '07');
+                const accStampW = c.measureText(accStampText).width;
+
+                F(700, rsvpSz, bf);
+                const rsvpFirstLineW = c.measureText(rsvpLines[0] || '').width;
+                const accNeedsOwnLine = (rsvpLines.length > 1) || (rsvpFirstLineW + accStampW + 36 > labelMw);
+
+                mh += rsvpLines.length * (rsvpSz * 1.32);
+                if (accNeedsOwnLine) {
+                    mh += Math.max(14, baseDim * 0.026);
+                }
+                mh += 8;
 
                 // Dynamic height auto-fit
                 const availH = H * 0.92 - plaqueStartY;
                 let totH = th + ih + mh;
                 if (totH > availH) {
-                    const fitRatio = Math.max(0.68, availH / (totH + 12));
+                    const fitRatio = Math.max(0.55, availH / (totH + 16));
                     bodyScale *= fitRatio;
                     titleScale *= fitRatio;
+                    artistSz *= fitRatio;
+                    artistH = artistLines.length * (artistSz * 1.25);
+                    artistSubSz *= fitRatio;
+                    artistSubH = artistSubLines.length * (artistSubSz * 1.35);
                     titleSz *= fitRatio;
-                    th *= fitRatio;
-                    ih *= fitRatio;
-                    mh *= fitRatio;
+                    workTitleH *= fitRatio;
+                    infoLblSz *= fitRatio;
+                    infoValSz *= fitRatio;
+                    infoStep *= fitRatio;
+                    medSz *= fitRatio;
+                    noteSz *= fitRatio;
+                    credSz *= fitRatio;
+                    rsvpSz *= fitRatio;
+                    th = artistH + artistSubH + workTitleH + baseDim * 0.022 * fitRatio + 6;
+                    ih = 0;
+                    wrappedInfo.forEach(({ lines }) => {
+                        ih += infoLblSz * 1.30 + lines.length * infoStep + baseDim * 0.014 * fitRatio;
+                    });
+                    mh = medLines.length * (medSz * 1.28) + baseDim * 0.012 * fitRatio;
+                    if (wrappedNotes.length) {
+                        wrappedNotes.forEach(lines => { mh += lines.length * (noteSz * 1.30); });
+                        mh += baseDim * 0.012 * fitRatio;
+                    }
+                    mh += credLines.length * (credSz * 1.32) + baseDim * 0.010 * fitRatio;
+                    if (hidLines.length) {
+                        mh += hidLines.length * (credSz * 1.32) + baseDim * 0.008 * fitRatio;
+                    }
+                    mh += rsvpLines.length * (rsvpSz * 1.32);
+                    if (accNeedsOwnLine) {
+                        mh += Math.max(14, baseDim * 0.026 * fitRatio);
+                    }
+                    mh += 8;
                     totH = th + ih + mh;
                 }
 
@@ -2495,96 +2602,119 @@
                 // Render Title
                 blk('t', (al, ox, oy, useMw) => {
                     let y = 0;
-                    F(800, Math.max(11, baseDim * 0.034 * titleScale), bf);
+                    F(800, artistSz, bf);
                     c.fillStyle = a;
-                    c.fillText(artistText, 0, y);
-                    y += baseDim * 0.038 * titleScale;
+                    artistLines.forEach(l => {
+                        c.fillText(l, 0, y);
+                        y += artistSz * 1.25;
+                    });
+                    y += 2;
 
-                    F(400, Math.max(9, baseDim * 0.022 * bodyScale), bf);
+                    F(400, artistSubSz, bf);
                     c.fillStyle = b;
-                    c.fillText(artistSub, 0, y);
-                    y += baseDim * 0.036 * bodyScale;
+                    artistSubLines.forEach(l => {
+                        c.fillText(l, 0, y);
+                        y += artistSubSz * 1.35;
+                    });
+                    y += 2;
 
                     F('italic ' + S.tw, titleSz, tf);
                     c.fillStyle = a;
                     workLines.forEach(l => {
                         c.fillText(l, 0, y);
-                        y += titleSz * 1.15;
+                        y += titleSz * 1.18;
                     });
 
                     // Hairline divider rule
                     y += baseDim * 0.012;
                     c.fillStyle = a;
                     c.fillRect(0, y, useMw, 1);
-                    return y + 6;
+                    return th;
                 }, mx, baseY.t, labelMw);
 
                 // Render Info
                 blk('i', (al, ox, oy, useMw) => {
                     let y = 0;
-                    infoLines.forEach(([lbl, v]) => {
-                        F(700, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                    wrappedInfo.forEach(({ lbl, lines }) => {
+                        F(700, infoLblSz, bf);
                         c.fillStyle = b;
                         c.fillText(lbl, 0, y);
-                        y += baseDim * 0.024 * bodyScale;
+                        y += infoLblSz * 1.30;
 
-                        F(S.bw, Math.max(9, baseDim * 0.029 * bodyScale), bf);
+                        F(S.bw, infoValSz, bf);
                         c.fillStyle = a;
-                        wrap(v, useMw).forEach(l => {
+                        lines.forEach(l => {
                             c.fillText(l, 0, y);
-                            y += baseDim * 0.035 * bodyScale;
+                            y += infoStep;
                         });
-                        y += baseDim * 0.010;
+                        y += baseDim * 0.014;
                     });
-                    return y;
+                    return ih;
                 }, mx, baseY.i, labelMw);
 
                 // Render Details
                 blk('m', (al, ox, oy, useMw) => {
                     let y = 0;
-                    F(500, Math.max(9, baseDim * 0.026 * bodyScale), bf);
+                    F(500, medSz, bf);
                     c.fillStyle = a;
-                    wrap(mediumText, useMw).forEach(l => {
+                    medLines.forEach(l => {
                         c.fillText(l, 0, y);
-                        y += baseDim * 0.033 * bodyScale;
+                        y += medSz * 1.28;
                     });
                     y += baseDim * 0.012;
 
-                    if (curNotes.length) {
-                        F(400, Math.max(9, baseDim * 0.024 * bodyScale), bf);
+                    if (wrappedNotes.length) {
+                        F(400, noteSz, bf);
                         c.fillStyle = a;
-                        curNotes.forEach(n => {
-                            c.fillText('— ' + n, 0, y);
-                            y += baseDim * 0.032 * bodyScale;
+                        wrappedNotes.forEach(lines => {
+                            lines.forEach(l => {
+                                c.fillText(l, 0, y);
+                                y += noteSz * 1.30;
+                            });
                         });
                         y += baseDim * 0.012;
                     }
 
-                    F(400, Math.max(8, baseDim * 0.021 * bodyScale), bf);
+                    F(400, credSz, bf);
                     c.fillStyle = b;
-                    c.fillText(creditText, 0, y);
-                    y += baseDim * 0.030 * bodyScale;
+                    credLines.forEach(l => {
+                        c.fillText(l, 0, y);
+                        y += credSz * 1.32;
+                    });
+                    y += baseDim * 0.010;
 
-                    if (f.hidden) {
-                        F(400, Math.max(8, baseDim * 0.020 * bodyScale), bf);
+                    if (hidLines.length) {
+                        F(400, credSz, bf);
                         c.fillStyle = a;
-                        c.fillText('Notice: ' + f.hidden, 0, y);
-                        y += baseDim * 0.028 * bodyScale;
+                        hidLines.forEach(l => {
+                            c.fillText(l, 0, y);
+                            y += credSz * 1.32;
+                        });
+                        y += baseDim * 0.008;
                     }
 
-                    y += baseDim * 0.008;
-                    F(700, Math.max(8, baseDim * 0.021 * bodyScale), bf);
+                    F(700, rsvpSz, bf);
                     c.fillStyle = a;
-                    c.fillText(rsvpText, 0, y);
+                    rsvpLines.forEach((l, idx) => {
+                        c.fillText(l, 0, y);
+                        if (idx < rsvpLines.length - 1) y += rsvpSz * 1.32;
+                    });
 
-                    // Museum accession stamp
-                    F(700, Math.max(8, baseDim * 0.017), 'Space Mono');
+                    F(700, Math.max(9, baseDim * 0.022), 'Space Mono');
                     c.fillStyle = b;
-                    c.textAlign = 'right';
-                    c.fillText('ACC. NO. ' + year + '.' + (S.seed || '07'), useMw, y);
-                    c.textAlign = 'left';
+                    if (accNeedsOwnLine) {
+                        y += rsvpSz * 1.32 + 4;
+                        c.textAlign = 'left';
+                        c.fillText(accStampText, 0, y);
+                        y += Math.max(12, baseDim * 0.022);
+                    } else {
+                        c.textAlign = 'right';
+                        c.fillText(accStampText, useMw, y);
+                        c.textAlign = 'left';
+                        y += rsvpSz * 1.32;
+                    }
 
-                    return y + baseDim * 0.028;
+                    return mh;
                 }, mx, baseY.m, labelMw);
 
             } else if (fmt === 'callsheet') {
@@ -2593,26 +2723,35 @@
                 // ----------------------------------------------------------------
                 const mx = W * 0.06, callMw = W * 0.88;
                 const topMargin = Math.max(26, H * 0.046);
+                const mastheadBarH = 26;
 
                 // Top Header Masthead
                 c.save();
                 c.fillStyle = a;
                 c.fillRect(mx, topMargin, callMw, 3);
-                F(700, Math.max(8, Math.min(11, baseDim * 0.018)), 'Space Mono');
+                F(700, Math.max(10, Math.min(13, baseDim * 0.022)), 'Space Mono');
                 c.fillStyle = a;
+                c.textBaseline = 'middle';
                 let leftMast = 'DAILY PRODUCTION CALL SHEET';
                 let rightMast = (f.hidden && /weather/i.test(f.hidden)) ? f.hidden.toUpperCase() : 'CLEAR / 64°F';
-                if (c.measureText(leftMast).width + c.measureText(rightMast).width + 24 > callMw) {
+                if (c.measureText(leftMast).width + c.measureText(rightMast).width + 32 > callMw) {
                     leftMast = 'CALL SHEET';
                 }
-                c.fillText(leftMast, mx, topMargin + 8);
+                while (c.measureText(leftMast).width + c.measureText(rightMast).width + 24 > callMw && rightMast.length > 6) {
+                    rightMast = rightMast.slice(0, -1);
+                }
+                if (f.hidden && /weather/i.test(f.hidden) && rightMast !== f.hidden.toUpperCase()) {
+                    rightMast = rightMast.slice(0, -1) + '…';
+                }
+                c.fillText(leftMast, mx, topMargin + 13);
                 c.textAlign = 'right';
-                c.fillText(rightMast, mx + callMw, topMargin + 8);
+                c.fillText(rightMast, mx + callMw, topMargin + 13);
                 c.textAlign = 'left';
-                c.fillRect(mx, topMargin + 23, callMw, 1);
+                c.fillRect(mx, topMargin + mastheadBarH, callMw, 1);
+                c.textBaseline = 'top';
                 c.restore();
 
-                const contentStartY = topMargin + 32;
+                const contentStartY = topMargin + mastheadBarH + 10;
 
                 // Photo slot as Location Still plate
                 if (PH.img) {
@@ -2635,35 +2774,56 @@
                 const targetTitleW = (PH.img ? callMw * 0.54 : callMw);
 
                 // Title Block sizing
-                let ts = baseDim * 0.076 * titleScale;
+                let titleHeaderSz = Math.max(11, baseDim * 0.025 * bodyScale);
+                let titleHeaderH = titleHeaderSz * 1.35;
+
+                let ts = baseDim * 0.096 * titleScale;
                 F(S.tw, ts, tf);
                 let titleLines = wrap((f.title || 'PRODUCTION TITLE').toUpperCase(), targetTitleW);
+                while ((titleLines.length * ts > H * 0.22 || titleLines.some(l => c.measureText(l).width > targetTitleW * 1.04)) && ts > 16) {
+                    ts *= 0.94;
+                    F(S.tw, ts, tf);
+                    titleLines = wrap((f.title || 'PRODUCTION TITLE').toUpperCase(), targetTitleW);
+                }
 
                 // Precalculate Call Box sizing
                 const timeVal = (f.time || '19:00 SHARP').toUpperCase();
-                let timeSz = Math.max(12, baseDim * 0.034 * bodyScale);
+                let timeSz = Math.max(16, baseDim * 0.046 * bodyScale);
                 F(800, timeSz, 'Space Mono');
-                while (c.measureText(timeVal).width > targetTitleW - 24 && timeSz > 10) {
+                while (c.measureText(timeVal).width > targetTitleW - 28 && timeSz > 11) {
                     timeSz *= 0.92;
                     F(800, timeSz, 'Space Mono');
                 }
-                const callW = Math.min(targetTitleW, Math.max(180, c.measureText(timeVal).width + 24));
-                const callH = Math.max(46, 20 + timeSz + 10);
-                let th = titleLines.length * ts * 1.05 + baseDim * 0.04 + callH + 8;
+                const callW = Math.min(targetTitleW, Math.max(200, c.measureText(timeVal).width + 28));
+                let callHeaderH = Math.max(22, Math.round(baseDim * 0.020 * bodyScale + 10));
+                let callH = Math.max(54, callHeaderH + timeSz + 14);
+                let tPad = baseDim * 0.016;
+                let th = titleHeaderH + titleLines.length * ts * 1.05 + tPad + callH + 8;
 
                 // Location Block sizing
-                const infoStep = baseDim * 0.036 * bodyScale;
+                let deptHeaderH = Math.max(22, Math.round(baseDim * 0.022 * bodyScale + 8));
+                let locLblSz = Math.max(11, baseDim * 0.024 * bodyScale);
+                let locValSz = Math.max(13, baseDim * 0.034 * bodyScale);
+                let infoStep = locValSz * 1.25;
                 const locLines = [
                     ['SHOOTING LOCATION', f.venue || 'TBD'],
                     ['BASECAMP ADDRESS', f.addr || 'TBD']
                 ];
-                let labelW = Math.max(150, baseDim * 0.22);
-                let locRows = 0;
-                locLines.forEach(([lbl, val]) => {
-                    F(S.bw, baseDim * 0.028 * bodyScale, bf);
-                    locRows += wrap(val, callMw - labelW - 24).length;
+                F(700, locLblSz, bf);
+                let maxLocLblW = 0;
+                locLines.forEach(([lbl]) => {
+                    maxLocLblW = Math.max(maxLocLblW, c.measureText(lbl + ':').width);
                 });
-                let ih = 28 + locRows * infoStep + 8;
+                let labelW = Math.max(maxLocLblW + 16, baseDim * 0.24);
+                let locH = deptHeaderH + 10;
+                const wrappedLocs = [];
+                locLines.forEach(([lbl, val]) => {
+                    F(S.bw, locValSz, bf);
+                    const lines = wrap(val, callMw - labelW - 24);
+                    wrappedLocs.push({ lbl, lines });
+                    locH += lines.length * infoStep + baseDim * 0.010;
+                });
+                let ih = Math.max(locH + 6, deptHeaderH + 50);
 
                 // Details & Crew Block sizing
                 const crewRoster = f.roles ? f.roles.split('\n').filter(Boolean) : [
@@ -2677,11 +2837,47 @@
                 const notes = f.sell ? ('SCENE NOTES: ' + f.sell) : '';
                 const rsvpCall = f.rsvp ? ('CONFIRM CALL TIME: ' + f.rsvp) : 'CONFIRM CALL TIME WITH PRODUCTION OFFICE';
 
-                let mh = 26 + Math.min(4, crewRoster.length) * (baseDim * 0.032 * bodyScale) + 10;
-                if (wardrobe.length) mh += (baseDim * 0.030 * bodyScale) * Math.min(2, wardrobe.length) + 8;
-                if (catering) mh += baseDim * 0.030 * bodyScale + 6;
-                if (notes) mh += baseDim * 0.030 * bodyScale + 6;
-                mh += 30; // footer
+                let crewItemSz = Math.max(12, baseDim * 0.032 * bodyScale);
+                let secLblSz = Math.max(11, baseDim * 0.024 * bodyScale);
+                let secValSz = Math.max(12, baseDim * 0.028 * bodyScale);
+                let footerH = Math.max(26, Math.round(baseDim * 0.024 * bodyScale + 10));
+
+                let mh = deptHeaderH + 10;
+                // Crew lines
+                mh += Math.min(4, crewRoster.length) * (crewItemSz * 1.30) + 8;
+                // Divider
+                mh += 6;
+
+                // Precompute wrapped wardrobe, catering, notes
+                F(700, secLblSz, bf);
+                const wardLblText = 'WARDROBE & GEAR:';
+                const wardLblW = Math.max(160, c.measureText(wardLblText).width + 16);
+                const wrappedWardrobe = [];
+                if (wardrobe.length) {
+                    F(S.bw, secValSz, bf);
+                    wardrobe.slice(0, 2).forEach(w => {
+                        const lines = wrap('— ' + w, callMw - wardLblW - 24);
+                        wrappedWardrobe.push(lines);
+                        mh += lines.length * (secValSz * 1.25);
+                    });
+                    mh += 8;
+                }
+
+                let wrappedCatering = [];
+                if (catering) {
+                    F(700, secValSz, bf);
+                    wrappedCatering = wrap(catering, callMw - 24);
+                    mh += wrappedCatering.length * (secValSz * 1.25) + 6;
+                }
+
+                let wrappedNotes = [];
+                if (notes) {
+                    F(500, secValSz, bf);
+                    wrappedNotes = wrap(notes, callMw - 24);
+                    mh += wrappedNotes.length * (secValSz * 1.25) + 6;
+                }
+
+                mh += footerH + 10;
 
                 // Dynamic height auto-fit
                 const availH = H * 0.94 - contentStartY;
@@ -2690,10 +2886,23 @@
                     const fitRatio = Math.max(0.68, availH / (totH + 12));
                     bodyScale *= fitRatio;
                     titleScale *= fitRatio;
+                    titleHeaderSz *= fitRatio;
+                    titleHeaderH *= fitRatio;
                     ts *= fitRatio;
-                    th *= fitRatio;
-                    ih *= fitRatio;
-                    mh *= fitRatio;
+                    timeSz *= fitRatio;
+                    callH = Math.max(40, Math.round(callH * fitRatio));
+                    tPad *= fitRatio;
+                    deptHeaderH = Math.max(18, Math.round(deptHeaderH * fitRatio));
+                    locLblSz *= fitRatio;
+                    locValSz *= fitRatio;
+                    infoStep *= fitRatio;
+                    crewItemSz *= fitRatio;
+                    secLblSz *= fitRatio;
+                    secValSz *= fitRatio;
+                    footerH = Math.max(22, Math.round(footerH * fitRatio));
+                    th = titleHeaderH + titleLines.length * ts * 1.05 + tPad + callH + 8;
+                    ih = Math.max(locH * fitRatio + 4, deptHeaderH + 40);
+                    mh = Math.round((mh - footerH) * fitRatio + footerH);
                     totH = th + ih + mh;
                 }
 
@@ -2707,10 +2916,10 @@
                 // Render Title & Call Time Block
                 blk('t', (al, ox, oy, useMw) => {
                     let y = 0;
-                    F(700, Math.max(9, baseDim * 0.021 * bodyScale), 'Space Mono');
+                    F(700, titleHeaderSz, 'Space Mono');
                     c.fillStyle = b;
                     c.fillText('PRODUCTION TITLE', 0, y);
-                    y += baseDim * 0.026 * bodyScale;
+                    y += titleHeaderH;
 
                     F(S.tw, ts, tf);
                     c.fillStyle = a;
@@ -2718,7 +2927,7 @@
                         c.fillText(l, 0, y);
                         y += ts * 1.05;
                     });
-                    y += baseDim * 0.012;
+                    y += tPad;
 
                     // Prominent General Call Time Box
                     c.save();
@@ -2726,20 +2935,20 @@
                     c.lineWidth = 1.5;
                     c.strokeRect(0, y, callW, callH);
                     c.fillStyle = b;
-                    c.fillRect(0, y, callW, 18);
+                    c.fillRect(0, y, callW, callHeaderH);
 
-                    F(700, 9, 'Space Mono');
+                    F(700, Math.max(10, baseDim * 0.020 * bodyScale), 'Space Mono');
                     c.fillStyle = pa;
                     c.textBaseline = 'middle';
-                    c.fillText('GENERAL CREW CALL', 8, y + 9);
+                    c.fillText('GENERAL CREW CALL', 8, y + callHeaderH / 2);
 
                     F(800, timeSz, 'Space Mono');
                     c.fillStyle = a;
-                    c.fillText(timeVal, 8, y + 20 + (callH - 20) / 2);
+                    c.fillText(timeVal, 8, y + callHeaderH + (callH - callHeaderH) / 2);
                     c.textBaseline = 'top';
                     c.restore();
 
-                    return y + callH + 6;
+                    return th;
                 }, W * 0.06, baseY.t, targetTitleW);
 
                 // Render Location & Basecamp Block
@@ -2750,24 +2959,26 @@
                     c.lineWidth = 1;
                     c.strokeRect(0, y, useMw, ih);
                     c.fillStyle = b;
-                    c.fillRect(0, y, useMw, 18);
-                    F(700, 9, 'Space Mono');
+                    c.fillRect(0, y, useMw, deptHeaderH);
+                    F(700, Math.max(10, baseDim * 0.020 * bodyScale), 'Space Mono');
                     c.fillStyle = pa;
-                    c.fillText('DEPARTMENT: LOCATION & BASECAMP', 8, y + 13);
+                    c.textBaseline = 'middle';
+                    c.fillText('DEPARTMENT: LOCATION & BASECAMP', 8, y + deptHeaderH / 2);
+                    c.textBaseline = 'top';
 
-                    y += 26;
-                    locLines.forEach(([lbl, val]) => {
-                        F(700, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                    y += deptHeaderH + 10;
+                    wrappedLocs.forEach(({ lbl, lines }) => {
+                        F(700, locLblSz, bf);
                         c.fillStyle = b;
                         c.fillText(lbl + ':', 10, y);
 
-                        F(S.bw, Math.max(9, baseDim * 0.028 * bodyScale), bf);
+                        F(S.bw, locValSz, bf);
                         c.fillStyle = a;
-                        const lines = wrap(val, useMw - labelW - 24);
                         lines.forEach(l => {
-                            c.fillText(l, labelW + 12, y);
+                            c.fillText(l, 10 + labelW, y);
                             y += infoStep;
                         });
+                        y += baseDim * 0.010;
                     });
                     c.restore();
                     return ih;
@@ -2781,18 +2992,20 @@
                     c.lineWidth = 1;
                     c.strokeRect(0, y, useMw, mh);
                     c.fillStyle = b;
-                    c.fillRect(0, y, useMw, 18);
-                    F(700, 9, 'Space Mono');
+                    c.fillRect(0, y, useMw, deptHeaderH);
+                    F(700, Math.max(10, baseDim * 0.020 * bodyScale), 'Space Mono');
                     c.fillStyle = pa;
-                    c.fillText('DEPARTMENT HEADS & CREW ROSTER', 8, y + 13);
-                    y += 24;
+                    c.textBaseline = 'middle';
+                    c.fillText('DEPARTMENT HEADS & CREW ROSTER', 8, y + deptHeaderH / 2);
+                    c.textBaseline = 'top';
+                    y += deptHeaderH + 10;
 
                     // Crew rows
-                    F(S.bw, Math.max(9, baseDim * 0.025 * bodyScale), bf);
+                    F(S.bw, crewItemSz, bf);
                     c.fillStyle = a;
                     crewRoster.slice(0, 4).forEach(r => {
                         c.fillText('• ' + r, 10, y);
-                        y += baseDim * 0.032 * bodyScale;
+                        y += crewItemSz * 1.30;
                     });
                     y += 4;
 
@@ -2802,45 +3015,55 @@
                     y += 6;
 
                     // Wardrobe & requirements
-                    if (wardrobe.length) {
-                        F(700, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                    if (wrappedWardrobe.length) {
+                        F(700, secLblSz, bf);
                         c.fillStyle = b;
-                        c.fillText('WARDROBE & GEAR:', 10, y);
-                        F(S.bw, Math.max(9, baseDim * 0.025 * bodyScale), bf);
+                        c.fillText(wardLblText, 10, y);
+                        F(S.bw, secValSz, bf);
                         c.fillStyle = a;
-                        wardrobe.slice(0, 2).forEach(w => {
-                            wrap('— ' + w, useMw - 160).forEach(l => {
-                                c.fillText(l, 150, y);
-                                y += baseDim * 0.028 * bodyScale;
+                        let wardY = y;
+                        wrappedWardrobe.forEach(lines => {
+                            lines.forEach(l => {
+                                c.fillText(l, 10 + wardLblW, wardY);
+                                wardY += secValSz * 1.25;
                             });
                         });
+                        y = Math.max(y + secLblSz * 1.25, wardY) + 4;
                     }
 
-                    if (catering) {
-                        F(700, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                    if (wrappedCatering.length) {
+                        F(700, secValSz, bf);
                         c.fillStyle = b;
-                        wrap(catering, useMw - 24).forEach(l => {
+                        wrappedCatering.forEach(l => {
                             c.fillText(l, 10, y);
-                            y += baseDim * 0.028 * bodyScale;
+                            y += secValSz * 1.25;
                         });
+                        y += 4;
                     }
 
-                    if (notes) {
-                        F(500, Math.max(9, baseDim * 0.020 * bodyScale), bf);
+                    if (wrappedNotes.length) {
+                        F(500, secValSz, bf);
                         c.fillStyle = a;
-                        wrap(notes, useMw - 24).forEach(l => {
+                        wrappedNotes.forEach(l => {
                             c.fillText(l, 10, y);
-                            y += baseDim * 0.028 * bodyScale;
+                            y += secValSz * 1.25;
                         });
+                        y += 4;
                     }
 
                     // Call confirmation footer
                     c.fillStyle = a;
-                    c.fillRect(0, mh - 24, useMw, 24);
-                    F(700, 10, 'Space Mono');
+                    c.fillRect(0, mh - footerH, useMw, footerH);
+                    let rsvpCallSz = Math.max(9, baseDim * 0.021 * bodyScale);
+                    let rsvpCallText = rsvpCall.toUpperCase();
+                    F(700, rsvpCallSz, 'Space Mono');
+                    while (c.measureText(rsvpCallText).width > useMw - 20 && rsvpCallSz > 8) {
+                        rsvpCallSz *= 0.94;
+                        F(700, rsvpCallSz, 'Space Mono');
+                    }
                     c.fillStyle = pa;
                     c.textBaseline = 'middle';
-                    c.fillText(rsvpCall.toUpperCase(), 10, mh - 12);
+                    c.fillText(rsvpCallText, 10, mh - footerH / 2);
                     c.textBaseline = 'top';
 
                     c.restore();
@@ -2853,7 +3076,7 @@
                 // ----------------------------------------------------------------
                 const mx = W * 0.06, newsMw = W * 0.88;
                 const topMargin = Math.max(26, H * 0.046);
-                const mastheadH = Math.max(46, baseDim * 0.085);
+                const mastheadH = Math.max(52, baseDim * 0.095);
 
                 // Newspaper Masthead Banner
                 c.save();
@@ -2864,11 +3087,11 @@
 
                 c.textAlign = 'center';
                 c.textBaseline = 'middle';
-                F(900, Math.max(13, baseDim * 0.036), tf);
+                F(900, Math.max(16, baseDim * 0.042), tf);
                 c.fillStyle = a;
                 c.fillText('THE CLASSIFIED ADVERTISER', W / 2, topMargin + mastheadH * 0.38);
 
-                F(700, Math.max(8, baseDim * 0.016), 'Space Mono');
+                F(700, Math.max(10, baseDim * 0.020), 'Space Mono');
                 c.fillStyle = b;
                 const dateHeader = 'VOL. XLVIII · ' + (f.date || 'WEEKEND EDITION').toUpperCase() + ' · SEC. C';
                 c.fillText(dateHeader, W / 2, topMargin + mastheadH * 0.74);
@@ -2897,7 +3120,7 @@
                 c.restore();
 
                 // Photo slot as classified newspaper thumbnail in column 2
-                let col2PhotoH = 0;
+                let colPhotoH = 0;
                 if (PH.img) {
                     const pw = colW * S.ps;
                     const ph = Math.min(H * 0.22, pw * PH.img.height / PH.img.width);
@@ -2910,161 +3133,252 @@
                     c.strokeRect(col2X, py, pw, ph);
                     c.drawImage(PH.img, col2X, py, pw, ph);
 
-                    F(500, Math.max(8, baseDim * 0.018), bf);
+                    F(500, Math.max(9, baseDim * 0.020), bf);
                     c.fillStyle = b;
                     c.fillText('Fig. 1: ' + (f.title || 'Notice Illustration'), col2X, py + ph + 4);
                     c.restore();
 
                     bx.push({ k: 'p', x: col2X, y: py, w: pw, h: ph + 16 });
-                    col2PhotoH = ph + 22;
+                    colPhotoH = ph + 22;
                 }
 
                 // Inverted crisp Category Header Banner helper
+                const catHeaderH = Math.max(18, baseDim * 0.030 * bodyScale);
                 const catHeader = (label, y, targetColW) => {
                     c.save();
                     c.fillStyle = a;
-                    const barH = Math.max(14, baseDim * 0.024 * bodyScale);
-                    c.fillRect(0, y, targetColW, barH);
-                    F(800, Math.max(8, baseDim * 0.017 * bodyScale), 'Space Mono');
+                    c.fillRect(0, y, targetColW, catHeaderH);
+                    F(800, Math.max(10, baseDim * 0.020 * bodyScale), 'Space Mono');
                     c.fillStyle = pa;
                     c.textBaseline = 'middle';
-                    c.fillText('✦ ' + label.toUpperCase(), 5, y + barH / 2);
+                    c.fillText('✦ ' + label.toUpperCase(), 6, y + catHeaderH / 2);
                     c.textBaseline = 'top';
                     c.restore();
-                    return barH + 7;
+                    return catHeaderH + 8;
                 };
+
+                // Column font sizing
+                let titleLeadSz = Math.max(14, baseDim * (numCols === 3 ? 0.046 : 0.052) * titleScale);
+                let sellSz = Math.max(11, baseDim * (numCols === 3 ? 0.031 : 0.035) * bodyScale);
+                let hostSz = Math.max(10, baseDim * (numCols === 3 ? 0.023 : 0.025) * bodyScale);
+                let infoLblSz = Math.max(10, baseDim * (numCols === 3 ? 0.020 : 0.022) * bodyScale);
+                let infoValSz = Math.max(11, baseDim * (numCols === 3 ? 0.029 : 0.032) * bodyScale);
+                let detailSz = Math.max(11, baseDim * (numCols === 3 ? 0.028 : 0.031) * bodyScale);
+                let rsvpSz = Math.max(12, baseDim * (numCols === 3 ? 0.030 : 0.034) * bodyScale);
+
+                // Column 1 / Block T precomputation
+                F(800, titleLeadSz, tf);
+                const titleLeadLines = wrap(f.title || 'SATURDAY NIGHT FOR SALE', colW);
+                let th = (catHeaderH + 8) + titleLeadLines.length * (titleLeadSz * 1.10) + baseDim * 0.012;
+                if (f.sell) {
+                    F(500, sellSz, bf);
+                    th += wrap(f.sell, colW).length * (sellSz * 1.25) + baseDim * 0.008;
+                }
+                if (f.host) {
+                    F(700, hostSz, bf);
+                    th += wrap('ADVERTISER: ' + f.host, colW).length * (hostSz * 1.25) + baseDim * 0.008;
+                }
+
+                // Block I (Schedule & Location) precomputation
+                const items = [
+                    ['DATE', f.date],
+                    ['TIME', f.time],
+                    ['PLACE', f.venue],
+                    ['ADDR', f.addr]
+                ].filter(([_, v]) => Boolean(v));
+
+                let ih = (catHeaderH + 8);
+                items.forEach(([lbl, v]) => {
+                    F(700, infoLblSz, 'Space Mono');
+                    const lw = Math.max(46, c.measureText(lbl + ': ').width);
+                    F(S.bw, infoValSz, bf);
+                    ih += wrap(v, colW - lw - 4).length * (infoValSz * 1.25) + 2;
+                });
+
+                // Block M (Details, Terms & Inquiries) precomputation
+                let mh = (numCols === 2 && PH.img ? colPhotoH : 0);
+                if (f.details) {
+                    F(S.bw, detailSz, bf);
+                    mh += (catHeaderH + 8);
+                    f.details.split('\n').filter(Boolean).forEach(d => {
+                        mh += wrap('• ' + d, colW).length * (detailSz * 1.25);
+                    });
+                    mh += baseDim * 0.010;
+                }
+                if (f.perks) {
+                    F(S.bw, detailSz, bf);
+                    mh += (catHeaderH + 8) + wrap('★ ' + f.perks, colW).length * (detailSz * 1.25) + baseDim * 0.010;
+                }
+                if (f.hidden) {
+                    F(400, detailSz * 0.90, bf);
+                    mh += (catHeaderH + 8) + wrap(f.hidden, colW).length * (detailSz * 1.15) + baseDim * 0.010;
+                }
+                F(700, rsvpSz, bf);
+                mh += (catHeaderH + 8) + wrap(f.rsvp ? ('Next step: ' + f.rsvp) : 'Reply directly to advertiser', colW).length * (rsvpSz * 1.25);
 
                 // Dynamic height auto-fitting
                 const availH = H * 0.94 - contentStartY;
-                let th = baseDim * 0.26 * bodyScale;
-                let ih = baseDim * 0.22 * bodyScale;
-                let mh = baseDim * 0.40 * bodyScale;
+                let maxColH;
+                if (numCols === 3) {
+                    const col2H = ih + (PH.img ? colPhotoH : 0);
+                    maxColH = Math.max(th, col2H, mh);
+                } else {
+                    const col1TotH = th + ih + baseDim * 0.018 * gapScale;
+                    maxColH = Math.max(col1TotH, mh);
+                }
 
-                if (th + ih > availH) {
-                    const fitRatio = Math.max(0.68, availH / (th + ih + 10));
+                if (maxColH > availH) {
+                    const fitRatio = Math.max(0.65, availH / (maxColH + 10));
                     bodyScale *= fitRatio;
                     titleScale *= fitRatio;
+                    titleLeadSz *= fitRatio;
+                    sellSz *= fitRatio;
+                    hostSz *= fitRatio;
+                    infoLblSz *= fitRatio;
+                    infoValSz *= fitRatio;
+                    detailSz *= fitRatio;
+                    rsvpSz *= fitRatio;
                     th *= fitRatio;
                     ih *= fitRatio;
                     mh *= fitRatio;
                 }
 
-                baseY.t = contentStartY;
-                baseY.i = contentStartY + th + baseDim * 0.018 * gapScale;
-                baseY.m = contentStartY + (PH.img ? col2PhotoH : 0);
+                const col1X = mx;
+                const col2X = mx + (colW + colGap);
+                const col3X = mx + 2 * (colW + colGap);
+
+                let posT_x, posT_y, posI_x, posI_y, posM_x, posM_y;
+
+                if (numCols === 3) {
+                    // 3-Column Layout: T in Col 1, I in Col 2 (below photo if any), M in Col 3
+                    posT_x = col1X;
+                    posT_y = contentStartY;
+
+                    posI_x = col2X;
+                    posI_y = contentStartY + (PH.img ? colPhotoH : 0);
+
+                    posM_x = col3X;
+                    posM_y = contentStartY;
+                } else {
+                    // 2-Column Layout: T in Col 1 top, I in Col 1 bottom, M in Col 2 (below photo if any)
+                    posT_x = col1X;
+                    posT_y = contentStartY;
+
+                    posI_x = col1X;
+                    posI_y = contentStartY + th + baseDim * 0.018 * gapScale;
+
+                    posM_x = col2X;
+                    posM_y = contentStartY + (PH.img ? colPhotoH : 0);
+                }
 
                 // Column 1 - Title / Lead Notice Block
                 blk('t', (al, ox, oy, useMw) => {
                     let y = 0;
                     y += catHeader('FOR SALE / SPECIAL NOTICE', y, colW);
 
-                    F(800, Math.max(11, baseDim * 0.040 * titleScale), tf);
+                    F(800, titleLeadSz, tf);
                     c.fillStyle = a;
                     const lines = wrap(f.title || 'SATURDAY NIGHT FOR SALE', colW);
                     lines.forEach(l => {
                         c.fillText(l, 0, y);
-                        y += baseDim * 0.044 * titleScale;
+                        y += titleLeadSz * 1.10;
                     });
                     y += baseDim * 0.012;
 
                     if (f.sell) {
-                        F(500, Math.max(9, baseDim * 0.027 * bodyScale), bf);
+                        F(500, sellSz, bf);
                         c.fillStyle = a;
                         wrap(f.sell, colW).forEach(l => {
                             c.fillText(l, 0, y);
-                            y += baseDim * 0.033 * bodyScale;
+                            y += sellSz * 1.25;
                         });
                         y += baseDim * 0.008;
                     }
 
                     if (f.host) {
-                        F(700, Math.max(8, baseDim * 0.020 * bodyScale), bf);
+                        F(700, hostSz, bf);
                         c.fillStyle = b;
-                        c.fillText('ADVERTISER: ' + f.host, 0, y);
-                        y += baseDim * 0.026 * bodyScale;
+                        const hostLines = wrap('ADVERTISER: ' + f.host, colW);
+                        hostLines.forEach(l => {
+                            c.fillText(l, 0, y);
+                            y += hostSz * 1.25;
+                        });
                     }
-                    return y;
-                }, mx, baseY.t, colW);
+                    return th;
+                }, posT_x, posT_y, colW);
 
-                // Column 1 (lower) - Schedule & Logistics Block
+                // Schedule & Logistics Block
                 blk('i', (al, ox, oy, useMw) => {
                     let y = 0;
                     y += catHeader('TIME & LOCATION', y, colW);
 
-                    const items = [
-                        ['DATE', f.date],
-                        ['TIME', f.time],
-                        ['PLACE', f.venue],
-                        ['ADDR', f.addr]
-                    ].filter(([_, v]) => Boolean(v));
-
                     items.forEach(([lbl, v]) => {
-                        F(700, Math.max(8, baseDim * 0.019 * bodyScale), 'Space Mono');
+                        F(700, infoLblSz, 'Space Mono');
                         c.fillStyle = b;
                         c.fillText(lbl + ':', 0, y);
-                        const lw = Math.max(48, c.measureText(lbl + ': ').width);
+                        const lw = Math.max(46, c.measureText(lbl + ': ').width);
 
-                        F(S.bw, Math.max(9, baseDim * 0.026 * bodyScale), bf);
+                        F(S.bw, infoValSz, bf);
                         c.fillStyle = a;
                         wrap(v, colW - lw - 4).forEach(l => {
                             c.fillText(l, lw + 2, y);
-                            y += baseDim * 0.032 * bodyScale;
+                            y += infoValSz * 1.25;
                         });
+                        y += 2;
                     });
-                    return y;
-                }, mx, baseY.i, colW);
+                    return ih;
+                }, posI_x, posI_y, colW);
 
-                // Column 2 - Details, Terms & Inquiries Block
-                const col2X = mx + (colW + colGap);
+                // Details, Terms & Inquiries Block
                 blk('m', (al, ox, oy, useMw) => {
                     let y = 0;
-                    y += catHeader('TERMS & CONDITIONS', y, colW);
 
                     if (f.details) {
-                        F(S.bw, Math.max(9, baseDim * 0.025 * bodyScale), bf);
+                        y += catHeader('TERMS & CONDITIONS', y, colW);
+                        F(S.bw, detailSz, bf);
                         c.fillStyle = a;
                         f.details.split('\n').filter(Boolean).forEach(d => {
                             wrap('• ' + d, colW).forEach(l => {
                                 c.fillText(l, 0, y);
-                                y += baseDim * 0.031 * bodyScale;
+                                y += detailSz * 1.25;
                             });
                         });
-                        y += baseDim * 0.012;
+                        y += baseDim * 0.010;
                     }
 
                     if (f.perks) {
                         y += catHeader('INCLUSIONS & PERKS', y, colW);
-                        F(S.bw, Math.max(9, baseDim * 0.025 * bodyScale), bf);
+                        F(S.bw, detailSz, bf);
                         c.fillStyle = a;
                         wrap('★ ' + f.perks, colW).forEach(l => {
                             c.fillText(l, 0, y);
-                            y += baseDim * 0.031 * bodyScale;
+                            y += detailSz * 1.25;
                         });
-                        y += baseDim * 0.012;
+                        y += baseDim * 0.010;
                     }
 
                     if (f.hidden) {
                         y += catHeader('FINE PRINT & RULES', y, colW);
-                        F(400, Math.max(8, baseDim * 0.021 * bodyScale), bf);
+                        F(400, detailSz * 0.90, bf);
                         c.fillStyle = b;
                         wrap(f.hidden, colW).forEach(l => {
                             c.fillText(l, 0, y);
-                            y += baseDim * 0.026 * bodyScale;
+                            y += detailSz * 1.15;
                         });
-                        y += baseDim * 0.012;
+                        y += baseDim * 0.010;
                     }
 
                     y += catHeader('HOW TO INQUIRE', y, colW);
-                    F(700, Math.max(9, baseDim * 0.026 * bodyScale), bf);
+                    F(700, rsvpSz, bf);
                     c.fillStyle = a;
                     const rsvpLines = wrap(f.rsvp ? ('Next step: ' + f.rsvp) : 'Reply directly to advertiser', colW);
                     rsvpLines.forEach(l => {
                         c.fillText(l, 0, y);
-                        y += baseDim * 0.032 * bodyScale;
+                        y += rsvpSz * 1.25;
                     });
 
-                    return y;
-                }, col2X, baseY.m, colW);
+                    return mh;
+                }, posM_x, posM_y, colW);
 
             } else {
                 // ----------------------------------------------------------------
@@ -3114,12 +3428,12 @@
                     ['Host', f.host]
                 ].filter(([_, v]) => Boolean(v));
 
-                let infoHeaderAdv = baseDim * 0.032 * bodyScale;
-                let infoLineAdv = baseDim * 0.044 * bodyScale;
-                let infoItemGap = baseDim * 0.014 * bodyScale;
+                let infoHeaderAdv = Math.max(12, baseDim * 0.034 * bodyScale);
+                let infoLineAdv = Math.max(16, baseDim * 0.046 * bodyScale);
+                let infoItemGap = Math.max(6, baseDim * 0.016 * bodyScale);
                 let ih = 0;
                 const measuredInfo = [];
-                F(S.bw, baseDim * 0.036 * bodyScale, bf);
+                F(S.bw, Math.max(14, baseDim * 0.038 * bodyScale), bf);
                 for (const [l, v] of infoList) {
                     const lines = wrap(v, mw);
                     measuredInfo.push({ label: l, valLines: lines });
@@ -3128,11 +3442,11 @@
 
                 // 3. Pre-calculate Copy / Details block
                 const copyList = [];
-                if (f.sell) copyList.push({ t: f.sell, sz: baseDim * 0.040 * bodyScale, w: S.bw, fam: tf, col: a });
-                if (f.details) copyList.push({ t: f.details.split('\n').filter(Boolean).map(x => '— ' + x).join('\n'), sz: baseDim * 0.029 * bodyScale, w: S.bw, fam: bf, col: a });
-                if (f.perks) copyList.push({ t: f.perks, sz: baseDim * 0.029 * bodyScale, w: S.bw, fam: bf, col: a });
-                if (f.hidden) copyList.push({ t: f.hidden, sz: baseDim * 0.025 * bodyScale, w: 400, fam: bf, col: a });
-                if (f.rsvp) copyList.push({ t: 'Next: ' + f.rsvp, sz: baseDim * 0.031 * bodyScale, w: 700, fam: bf, col: b });
+                if (f.sell) copyList.push({ t: f.sell, sz: Math.max(14, baseDim * 0.042 * bodyScale), w: S.bw, fam: tf, col: a });
+                if (f.details) copyList.push({ t: f.details.split('\n').filter(Boolean).map(x => '— ' + x).join('\n'), sz: Math.max(12, baseDim * 0.034 * bodyScale), w: S.bw, fam: bf, col: a });
+                if (f.perks) copyList.push({ t: f.perks, sz: Math.max(12, baseDim * 0.034 * bodyScale), w: S.bw, fam: bf, col: a });
+                if (f.hidden) copyList.push({ t: f.hidden, sz: Math.max(11, baseDim * 0.028 * bodyScale), w: 400, fam: bf, col: a });
+                if (f.rsvp) copyList.push({ t: 'Next: ' + f.rsvp, sz: Math.max(13, baseDim * 0.035 * bodyScale), w: 700, fam: bf, col: b });
 
                 let mh = 0;
                 for (const item of copyList) {
